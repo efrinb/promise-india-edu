@@ -1,0 +1,233 @@
+import Link from 'next/link';
+import { 
+  GraduationCap, 
+  Target, 
+  Eye, 
+  Shield, 
+  DollarSign, 
+  Users, 
+  CheckCircle,
+  ArrowRight,
+  MapPin,
+} from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { prisma } from '@/lib/db';
+import { formatCurrency } from '@/lib/utils';
+
+export const metadata = {
+  title: 'Promise India Education Consultancy - Nursing College Admissions',
+  description: 'Your trusted partner for nursing college admissions with transparent fees and personalized support.',
+};
+
+async function getFeaturedColleges() {
+  const colleges = await prisma.college.findMany({
+    where: {
+      featured: true,
+      status: 'published',
+    },
+    take: 3,
+    orderBy: { createdAt: 'desc' },
+  });
+  return colleges;
+}
+
+export default async function HomePage() {
+  const featuredColleges = await getFeaturedColleges();
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-primary via-primary-600 to-secondary py-20 md:py-32">
+        <div className="container-custom">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="text-white">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+                Your Trusted Partner for Nursing College Admissions
+              </h1>
+              <p className="text-xl md:text-2xl mb-8 text-gray-100">
+                Guiding students toward top accredited nursing institutions with transparent fees and personalized support.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/colleges">
+                  <Button variant="accent" size="lg">
+                    Explore Colleges
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
+                    Get Free Consultation
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <GraduationCap className="h-64 w-64 text-white/80 mx-auto" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision */}
+      <section className="section bg-gray-50">
+        <div className="container-custom">
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="p-8">
+              <div className="flex items-start space-x-4">
+                <div className="bg-primary/10 p-4 rounded-full">
+                  <Target className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    To empower aspiring nurses with access to quality education by providing comprehensive guidance,
+                    transparent information, and unwavering support throughout their admission journey to the best
+                    nursing institutions in India.
+                  </p>
+                </div>
+              </div>
+            </Card>
+            <Card className="p-8">
+              <div className="flex items-start space-x-4">
+                <div className="bg-secondary/10 p-4 rounded-full">
+                  <Eye className="h-8 w-8 text-secondary" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    To become India's most trusted education consultancy, known for ethical practices, student-first
+                    approach, and contributing to building a skilled nursing workforce that serves the nation with
+                    excellence and compassion.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="section">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Promise India?</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We stand out with our commitment to transparency, personalized care, and proven track record.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <Card className="p-6 text-center">
+              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-primary" />
+              </div>
+              <h4 className="text-xl font-bold mb-3">Verified Colleges</h4>
+              <p className="text-gray-600">
+                Only accredited and recognized nursing institutions with proven track records.
+              </p>
+            </Card>
+
+            <Card className="p-6 text-center">
+              <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <DollarSign className="h-8 w-8 text-secondary" />
+              </div>
+              <h4 className="text-xl font-bold mb-3">Transparent Fee Structure</h4>
+              <p className="text-gray-600">
+                Clear, upfront fee information with no hidden charges or surprises.
+              </p>
+            </Card>
+
+            <Card className="p-6 text-center">
+              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-accent" />
+              </div>
+              <h4 className="text-xl font-bold mb-3">Personalized Counseling</h4>
+              <p className="text-gray-600">
+                One-on-one guidance tailored to your academic background and career goals.
+              </p>
+            </Card>
+
+            <Card className="p-6 text-center">
+              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-8 w-8 text-primary" />
+              </div>
+              <h4 className="text-xl font-bold mb-3">End-to-End Support</h4>
+              <p className="text-gray-600">
+                Complete assistance from college selection to admission completion.
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Colleges */}
+      <section className="section bg-gray-50">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Top Nursing Colleges</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Explore our featured nursing institutions offering excellent education and facilities.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {featuredColleges.map((college) => (
+              <Card key={college.id}>
+                <div className="aspect-video bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                  <GraduationCap className="h-24 w-24 text-white/50" />
+                </div>
+                <div className="p-6">
+                  <div className="flex items-start space-x-2 text-sm text-gray-600 mb-2">
+                    <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                    <span>{college.location}</span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{college.name}</h3>
+                  <p className="text-gray-600 mb-4 line-clamp-2">{college.shortDescription}</p>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm text-gray-600">Annual Fee:</span>
+                    <span className="text-lg font-bold text-primary">
+                      {formatCurrency((college.fees as any).total)}
+                    </span>
+                  </div>
+                  <Link href={`/colleges/${college.slug}`}>
+                    <Button variant="primary" className="w-full">
+                      Read More
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link href="/colleges">
+              <Button variant="outline" size="lg">
+                View All Colleges
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Strip */}
+      <section className="bg-gradient-primary py-16">
+        <div className="container-custom text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            Start Your Admission Journey Today
+          </h2>
+          <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
+            Get personalized guidance from our expert counselors and secure your seat in a top nursing college.
+          </p>
+          <Link href="/contact">
+            <Button variant="accent" size="lg">
+              Book Free Consultation
+            </Button>
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}

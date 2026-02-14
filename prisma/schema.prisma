@@ -1,0 +1,79 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin") // admin, super_admin
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+
+  @@index([role])
+  @@index([active])
+}
+
+model College {
+  id               String   @id @default(cuid())
+  name             String
+  slug             String   @unique
+  category         String
+  location         String
+  shortDescription String
+  about            String   @db.Text
+  courses          String[] @default([])
+  fees             Json
+  featured         Boolean  @default(false)
+  thumbnailUrl     String?
+  galleryUrls      String[] @default([])
+  googleFormUrl    String?
+  status           String   @default("draft")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([category])
+  @@index([status])
+  @@index([featured])
+}
+
+model consultation {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  city      String?
+  message   String?  @db.Text
+  status    String   @default("pending")
+  notified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([notified])
+}
+
+model Settings {
+  id            String   @id @default(cuid())
+  adminEmail    String
+  phone         String?
+  address       String?
+  whatsappUrl   String?
+  facebookUrl   String?
+  instagramUrl  String?
+  twitterUrl    String?
+  linkedinUrl   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
