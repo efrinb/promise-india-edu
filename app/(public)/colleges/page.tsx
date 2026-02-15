@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, MapPin, GraduationCap, ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -86,6 +87,7 @@ export default function CollegesPage() {
         {/* Results */}
         {loading ? (
           <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-gray-600">Loading colleges...</p>
           </div>
         ) : colleges.length === 0 ? (
@@ -97,26 +99,85 @@ export default function CollegesPage() {
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {colleges.map((college) => (
-                <Card key={college.id}>
-                  <div className="aspect-video bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                    <GraduationCap className="h-24 w-24 text-white/50" />
+                <Card key={college.id} className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  {/* College Image */}
+                  <div className="relative aspect-video overflow-hidden">
+                    {college.thumbnailUrl ? (
+                      <Image
+                        src={college.thumbnailUrl}
+                        alt={college.name}
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                        <GraduationCap className="h-24 w-24 text-white/50" />
+                      </div>
+                    )}
+
+                    {/* Featured Badge */}
+                    {college.featured && (
+                      <div className="absolute top-3 right-3">
+                        <span className="bg-accent text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                          Featured
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Category Badge */}
+                    <div className="absolute bottom-3 left-3">
+                      <span className="bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-xs font-semibold">
+                        {college.category}
+                      </span>
+                    </div>
                   </div>
+
                   <div className="p-6">
                     <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
                       <MapPin className="h-4 w-4" />
                       <span>{college.location}</span>
                     </div>
-                    <h3 className="text-xl font-bold mb-3">{college.name}</h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3">{college.shortDescription}</p>
+
+                    <h3 className="text-xl font-bold mb-3 hover:text-primary transition-colors">
+                      {college.name}
+                    </h3>
+
+                    <p className="text-gray-600 mb-4 line-clamp-3">
+                      {college.shortDescription}
+                    </p>
+
+                    {/* Courses Badge (if available) */}
+                    {college.courses && college.courses.length > 0 && (
+                      <div className="mb-4">
+                        <p className="text-xs text-gray-500 mb-2">Courses Offered:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {college.courses.slice(0, 2).map((course, idx) => (
+                            <span
+                              key={idx}
+                              className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium"
+                            >
+                              {course.split('(')[0].trim()}
+                            </span>
+                          ))}
+                          {college.courses.length > 2 && (
+                            <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">
+                              +{college.courses.length - 2} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex items-center justify-between mb-4 pb-4 border-b">
                       <span className="text-sm text-gray-600">Annual Fee:</span>
                       <span className="text-lg font-bold text-primary">
                         {formatCurrency((college.fees as any).total)}
                       </span>
                     </div>
+
                     <Link href={`/colleges/${college.slug}`}>
                       <Button variant="primary" className="w-full">
-                        Read More
+                        View Details
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </Link>
@@ -125,8 +186,22 @@ export default function CollegesPage() {
               ))}
             </div>
 
-            <div className="mt-8 text-center text-gray-600">
-              Showing {colleges.length} college{colleges.length !== 1 ? 's' : ''}
+            <div className="mt-12 text-center">
+              <p className="text-gray-600">
+                Showing {colleges.length} college{colleges.length !== 1 ? 's' : ''}
+              </p>
+              {(search || category || location) && (
+                <button
+                  onClick={() => {
+                    setSearch('');
+                    setCategory('');
+                    setLocation('');
+                  }}
+                  className="mt-4 text-primary hover:underline text-sm font-medium"
+                >
+                  Clear all filters
+                </button>
+              )}
             </div>
           </>
         )}

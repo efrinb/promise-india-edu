@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { GraduationCap, MessageSquare, CheckCircle, Clock, Shield, Plus } from 'lucide-react';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { useNotifications } from '@/context/NotificationContext';
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState({
@@ -15,6 +16,7 @@ export default function AdminDashboardPage() {
   });
   const [loading, setLoading] = useState(true);
   const [currentAdmin, setCurrentAdmin] = useState<any>(null);
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     fetchStats();
@@ -25,7 +27,6 @@ export default function AdminDashboardPage() {
     try {
       const response = await fetch('/api/auth/me');
       const data = await response.json();
-      console.log('Dashboard - Current Admin:', data.admin); // Debug log
       if (response.ok) {
         setCurrentAdmin(data.admin);
       }
@@ -107,12 +108,6 @@ export default function AdminDashboardPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
         <p className="text-gray-600">Welcome to Promise India Education Admin Panel</p>
-        {/* Debug info - remove in production */}
-        {currentAdmin && (
-          <p className="text-xs text-gray-500 mt-2">
-            Logged in as: {currentAdmin.email} | Role: {currentAdmin.role || 'Not set'}
-          </p>
-        )}
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -155,9 +150,9 @@ export default function AdminDashboardPage() {
               <Link href="/admin/consultations">
                 <Button variant="secondary" className="w-full">
                   View Consultation Requests
-                  {stats.pendingConsultations > 0 && (
-                    <span className="ml-2 bg-white text-secondary px-2 py-0.5 rounded-full text-xs">
-                      {stats.pendingConsultations}
+                  {unreadCount > 0 && (
+                    <span className="ml-2 bg-white text-secondary px-2 py-0.5 rounded-full text-xs font-bold">
+                      {unreadCount}
                     </span>
                   )}
                 </Button>
