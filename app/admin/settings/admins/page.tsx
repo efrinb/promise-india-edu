@@ -1,57 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, Trash2, Shield, User, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Shield, User, AlertTriangle } from 'lucide-react';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { formatDateTime } from '@/lib/utils';
 
-/* ----------------------------- */
-/* Modal Component */
-/* ----------------------------- */
-
-function Modal({
-    isOpen,
-    onClose,
-    title,
-    children,
-}: {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    children: React.ReactNode;
-}) {
-    if (!isOpen) return null;
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-xl w-full max-w-md shadow-xl p-6 relative">
-                <button
-                    onClick={onClose}
-                    className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
-                >
-                    <X className="h-5 w-5" />
-                </button>
-
-                <h3 className="text-lg font-bold mb-4">{title}</h3>
-
-                <div>{children}</div>
-            </div>
-        </div>
-    );
-}
-
-/* ----------------------------- */
-/* Main Page */
-/* ----------------------------- */
-
 export default function AdminsManagementPage() {
     const [admins, setAdmins] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [adminToDelete, setAdminToDelete] = useState<{ id: string; name: string } | null>(null);
     const [currentAdmin, setCurrentAdmin] = useState<any>(null);
-
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -60,31 +22,10 @@ export default function AdminsManagementPage() {
         active: true,
     });
 
-    /* Modal States */
-    const [modalOpen, setModalOpen] = useState(false);
-    const [modalType, setModalType] = useState<'error' | 'confirm' | 'success' | null>(null);
-    const [modalMessage, setModalMessage] = useState('');
-    const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
-
     useEffect(() => {
         fetchAdmins();
         checkCurrentAdmin();
     }, []);
-
-    const openModal = (
-        type: 'error' | 'confirm' | 'success',
-        message: string
-    ) => {
-        setModalType(type);
-        setModalMessage(message);
-        setModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setModalOpen(false);
-        setModalType(null);
-        setDeleteTarget(null);
-    };
 
     const fetchAdmins = async () => {
         try {
@@ -94,7 +35,7 @@ export default function AdminsManagementPage() {
                 setAdmins(data.admins || []);
             }
         } catch (error) {
-            openModal('error', 'Failed to fetch admins.');
+            console.error('Failed to fetch admins:', error);
         } finally {
             setLoading(false);
         }
@@ -105,8 +46,8 @@ export default function AdminsManagementPage() {
             const response = await fetch('/api/auth/me');
             const data = await response.json();
             setCurrentAdmin(data.admin);
-        } catch {
-            openModal('error', 'Failed to fetch current admin.');
+        } catch (error) {
+            console.error('Failed to fetch current admin');
         }
     };
 
@@ -122,45 +63,40 @@ export default function AdminsManagementPage() {
 
             if (response.ok) {
                 setShowForm(false);
-                setFormData({
-                    email: '',
-                    password: '',
-                    name: '',
-                    role: 'admin',
-                    active: true,
-                });
+                setFormData({ email: '', password: '', name: '', role: 'admin', active: true });
                 fetchAdmins();
-                openModal('success', 'Admin created successfully.');
             } else {
                 const data = await response.json();
-                openModal('error', data.error || 'Failed to create admin.');
+                alert(data.error || 'Failed to create admin');
             }
-        } catch {
-            openModal('error', 'Error creating admin.');
+        } catch (error) {
+            alert('Error creating admin');
         }
     };
 
-    const confirmDelete = (id: string, name: string) => {
-        setDeleteTarget({ id, name });
-        openModal('confirm', `Delete admin "${name}"?`);
+    const openDeleteModal = (id: string, name: string) => {
+        setAdminToDelete({ id, name });
+        setShowDeleteModal(true);
     };
 
-    const handleDelete = async () => {
-        if (!deleteTarget) return;
+    const closeDeleteModal = () => {
+        setShowDeleteModal(false);
+        setAdminToDelete(null);
+    };
+
+    const confirmDelete = async () => {
+        if (!adminToDelete) return;
 
         try {
-            const response = await fetch(`/api/admin/${deleteTarget.id}`, {
-                method: 'DELETE',
-            });
-
+            const response = await fetch(`/api/admin/${adminToDelete.id}`, { method: 'DELETE' });
             if (response.ok) {
                 fetchAdmins();
-                openModal('success', 'Admin deleted successfully.');
+                closeDeleteModal();
             } else {
-                openModal('error', 'Failed to delete admin.');
+                alert('Failed to delete admin');
             }
-        } catch {
-            openModal('error', 'Error deleting admin.');
+        } catch (error) {
+            alert('Error deleting admin');
         }
     };
 
@@ -174,23 +110,28 @@ export default function AdminsManagementPage() {
 
             if (response.ok) {
                 fetchAdmins();
-            } else {
-                openModal('error', 'Failed to update admin.');
             }
-        } catch {
-            openModal('error', 'Error updating admin.');
+        } catch (error) {
+            alert('Error updating admin');
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading admins...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (currentAdmin?.role !== 'super_admin') {
         return (
             <Card>
                 <CardBody className="text-center py-12">
-                    <p className="text-gray-600">
-                        Only super admins can manage other administrators.
-                    </p>
+                    <p className="text-gray-600">Only super admins can manage other administrators.</p>
                 </CardBody>
             </Card>
         );
@@ -198,13 +139,10 @@ export default function AdminsManagementPage() {
 
     return (
         <div>
-            {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div>
                     <h1 className="text-3xl font-bold mb-2">Admin Management</h1>
-                    <p className="text-gray-600">
-                        Manage administrator accounts and permissions
-                    </p>
+                    <p className="text-gray-600">Manage administrator accounts and permissions</p>
                 </div>
                 <Button variant="primary" onClick={() => setShowForm(!showForm)}>
                     <Plus className="mr-2 h-4 w-4" />
@@ -212,60 +150,108 @@ export default function AdminsManagementPage() {
                 </Button>
             </div>
 
-            {/* Admin List */}
+            {showForm && (
+                <Card className="mb-6">
+                    <CardBody>
+                        <h3 className="text-lg font-bold mb-4">Create New Admin</h3>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <Input
+                                    label="Full Name"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    required
+                                />
+                                <Input
+                                    label="Email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    required
+                                />
+                                <Input
+                                    label="Password"
+                                    type="password"
+                                    value={formData.password}
+                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                    required
+                                    placeholder="Min 6 characters"
+                                />
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Role
+                                    </label>
+                                    <select
+                                        value={formData.role}
+                                        onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                        className="input"
+                                    >
+                                        <option value="admin">Admin</option>
+                                        <option value="super_admin">Super Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button type="submit" variant="primary">Create Admin</Button>
+                                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </form>
+                    </CardBody>
+                </Card>
+            )}
+
             <div className="space-y-4">
                 {admins.map((admin) => (
                     <Card key={admin.id}>
                         <CardBody>
                             <div className="flex items-start justify-between">
                                 <div className="flex items-start space-x-3">
-                                    <div
-                                        className={`p-3 rounded-full ${admin.role === 'super_admin'
-                                                ? 'bg-purple-100'
-                                                : 'bg-blue-100'
-                                            }`}
-                                    >
+                                    <div className={`p-3 rounded-full ${admin.role === 'super_admin' ? 'bg-purple-100' : 'bg-blue-100'
+                                        }`}>
                                         {admin.role === 'super_admin' ? (
                                             <Shield className="h-5 w-5 text-purple-600" />
                                         ) : (
                                             <User className="h-5 w-5 text-blue-600" />
                                         )}
                                     </div>
-
                                     <div>
-                                        <h3 className="text-lg font-bold">
-                                            {admin.name}
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            {admin.email}
-                                        </p>
-                                        <span className="text-gray-500 text-sm">
-                                            Created {formatDateTime(admin.createdAt)}
-                                        </span>
+                                        <h3 className="text-lg font-bold">{admin.name}</h3>
+                                        <p className="text-sm text-gray-600">{admin.email}</p>
+                                        <div className="flex items-center gap-3 mt-2 text-sm">
+                                            <span className={`px-2 py-1 rounded text-xs font-semibold ${admin.role === 'super_admin'
+                                                    ? 'bg-purple-100 text-purple-800'
+                                                    : 'bg-blue-100 text-blue-800'
+                                                }`}>
+                                                {admin.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                                            </span>
+                                            <span className={`px-2 py-1 rounded text-xs font-semibold ${admin.active
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-gray-100 text-gray-800'
+                                                }`}>
+                                                {admin.active ? 'Active' : 'Inactive'}
+                                            </span>
+                                            <span className="text-gray-500">
+                                                Created {formatDateTime(admin.createdAt)}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-
                                 {currentAdmin?.id !== admin.id && (
                                     <div className="flex gap-2">
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() =>
-                                                toggleActive(admin.id, admin.active)
-                                            }
+                                            onClick={() => toggleActive(admin.id, admin.active)}
                                         >
-                                            {admin.active
-                                                ? 'Deactivate'
-                                                : 'Activate'}
+                                            {admin.active ? 'Deactivate' : 'Activate'}
                                         </Button>
-
                                         <Button
                                             variant="outline"
                                             size="sm"
+                                            onClick={() => openDeleteModal(admin.id, admin.name)}
                                             className="text-red-600 hover:bg-red-50"
-                                            onClick={() =>
-                                                confirmDelete(admin.id, admin.name)
-                                            }
                                         >
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
@@ -277,44 +263,44 @@ export default function AdminsManagementPage() {
                 ))}
             </div>
 
-            {/* Modal */}
-            <Modal
-                isOpen={modalOpen}
-                onClose={closeModal}
-                title={
-                    modalType === 'confirm'
-                        ? 'Confirm Action'
-                        : modalType === 'error'
-                            ? 'Error'
-                            : 'Success'
-                }
-            >
-                <p className="mb-6">{modalMessage}</p>
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-2xl max-w-md w-full animate-fade-in">
+                        <div className="p-6">
+                            <div className="flex items-center space-x-3 mb-4">
+                                <div className="bg-red-100 p-3 rounded-full">
+                                    <AlertTriangle className="h-6 w-6 text-red-600" />
+                                </div>
+                                <h3 className="text-xl font-bold">Delete Admin</h3>
+                            </div>
 
-                <div className="flex justify-end gap-3">
-                    {modalType === 'confirm' ? (
-                        <>
-                            <Button variant="outline" onClick={closeModal}>
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="primary"
-                                onClick={() => {
-                                    handleDelete();
-                                    closeModal();
-                                }}
-                                className="bg-red-600 hover:bg-red-700"
-                            >
-                                Delete
-                            </Button>
-                        </>
-                    ) : (
-                        <Button variant="primary" onClick={closeModal}>
-                            OK
-                        </Button>
-                    )}
+                            <p className="text-gray-600 mb-6">
+                                Are you sure you want to delete <strong>{adminToDelete?.name}</strong>?
+                                This action cannot be undone.
+                            </p>
+
+                            <div className="flex gap-3">
+                                <Button
+                                    variant="outline"
+                                    onClick={closeDeleteModal}
+                                    className="flex-1"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={confirmDelete}
+                                    className="flex-1 bg-red-600 hover:bg-red-700"
+                                >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete Admin
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </Modal>
+            )}
         </div>
     );
 }

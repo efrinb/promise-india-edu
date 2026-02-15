@@ -27,9 +27,13 @@ export const collegeSchema = z.object({
     total: z.number().min(0),
   }),
   featured: z.boolean().default(false),
-  thumbnailUrl: z.string().optional(),
+  thumbnailUrl: z.string().nullable().optional(),
   galleryUrls: z.array(z.string()).default([]),
-  googleFormUrl: z.string().url().optional().or(z.literal('')),
+  googleFormUrl: z.string().nullable().optional().transform(val => {
+    // Transform empty string to null
+    if (val === '' || val === undefined) return null;
+    return val;
+  }),
   status: z.enum(['draft', 'published']).default('draft'),
 });
 

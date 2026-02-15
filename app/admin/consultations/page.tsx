@@ -5,12 +5,14 @@ import { Mail, Phone, MapPin, Calendar, CheckCircle, Clock } from 'lucide-react'
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { formatDateTime } from '@/lib/utils';
+import { useNotifications } from '@/context/NotificationContext';
 import type { Consultation } from '@/types';
 
 export default function AdminConsultationsPage() {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const { fetchNotifications } = useNotifications();
 
   useEffect(() => {
     fetchConsultations();
@@ -37,7 +39,8 @@ export default function AdminConsultationsPage() {
       });
 
       if (response.ok) {
-        fetchConsultations();
+        await fetchConsultations();
+        await fetchNotifications(); // Refresh notification count
       }
     } catch (error) {
       alert('Failed to update status');
@@ -49,7 +52,16 @@ export default function AdminConsultationsPage() {
     return c.status === filter;
   });
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading consultations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { ArrowLeft, Save, Upload, X, Image as ImageIcon, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -24,11 +24,17 @@ const NURSING_COURSES = [
   'Certificate in Nursing',
 ];
 
+interface ValidationError {
+  field: string;
+  message: string;
+}
+
 export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
 
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
@@ -61,6 +67,48 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
         ? prev.courses.filter(c => c !== course)
         : [...prev.courses, course]
     }));
+  };
+
+  const validateForm = (): boolean => {
+    const errors: ValidationError[] = [];
+
+    // Required field validations
+    if (!formData.name || formData.name.trim().length < 3) {
+      errors.push({ field: 'name', message: 'College name must be at least 3 characters' });
+    }
+
+    if (!formData.location || formData.location.trim().length < 3) {
+      errors.push({ field: 'location', message: 'Location is required' });
+    }
+
+    if (!formData.shortDescription || formData.shortDescription.trim().length < 10) {
+      errors.push({ field: 'shortDescription', message: 'Short description must be at least 10 characters' });
+    }
+
+    if (!formData.about || formData.about.trim().length < 50) {
+      errors.push({ field: 'about', message: 'About section must be at least 50 characters' });
+    }
+
+    // Nursing courses validation
+    if (formData.category === 'Nursing' && formData.courses.length === 0) {
+      errors.push({ field: 'courses', message: 'Please select at least one nursing course' });
+    }
+
+    // Fee validation
+    if (Number(formData.tuition) <= 0) {
+      errors.push({ field: 'tuition', message: 'Tuition fee must be greater than 0' });
+    }
+
+    if (Number(formData.hostel) <= 0) {
+      errors.push({ field: 'hostel', message: 'Hostel fee must be greater than 0' });
+    }
+
+    if (Number(formData.other) < 0) {
+      errors.push({ field: 'other', message: 'Other fees cannot be negative' });
+    }
+
+    setValidationErrors(errors);
+    return errors.length === 0;
   };
 
   const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,23 +194,25 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setValidationErrors([]);
 
-    // Validation
-    if (formData.category === 'Nursing' && formData.courses.length === 0) {
-      setError('Please select at least one nursing course');
-      setLoading(false);
+    // Validate form before submission
+    if (!validateForm()) {
+      setError('Please fix the errors below before submitting');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
+    setLoading(true);
+
     try {
       const payload = {
-        name: formData.name,
+        name: formData.name.trim(),
         category: formData.category,
-        location: formData.location,
-        shortDescription: formData.shortDescription,
-        about: formData.about,
+        location: formData.location.trim(),
+        shortDescription: formData.shortDescription.trim(),
+        about: formData.about.trim(),
         courses: formData.courses,
         fees: {
           tuition: Number(formData.tuition),
@@ -173,7 +223,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
         featured: formData.featured,
         thumbnailUrl: formData.thumbnailUrl || null,
         galleryUrls: formData.galleryUrls,
-        googleFormUrl: formData.googleFormUrl || null,
+        googleFormUrl: formData.googleFormUrl.trim() || null,
         status: formData.status,
       };
 
@@ -186,24 +236,42 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
         body: JSON.stringify(payload),
       });
 
-      let data = null;
-      const text = await response.text();
-      if (text) {
-        data = JSON.parse(text);
+      if (!response.ok) {
+        let errorMessage = 'Failed to save college';
+
+        try {
+          const data = await response.json();
+
+          // Handle validation errors from server
+          if (data.details && Array.isArray(data.details)) {
+            const serverErrors: ValidationError[] = data.details.map((err: any) => ({
+              field: err.path?.[0] || 'unknown',
+              message: err.message || 'Validation error'
+            }));
+            setValidationErrors(serverErrors);
+          }
+
+          errorMessage = data.message || data.error || errorMessage;
+        } catch (parseError) {
+          errorMessage = response.statusText || errorMessage;
+        }
+
+        setError(errorMessage);
+        setLoading(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
       }
 
-      if (response.ok) {
-        router.push('/admin/colleges');
-        router.refresh();
-      } else {
-        setError(data.error || 'Failed to save college');
-      }
+      router.push('/admin/colleges');
+      router.refresh();
     } catch (err) {
-      console.error(err);
-      setError('An error occurred. Please try again.');
-    } finally {
+      setError('An unexpected error occurred. Please try again.');
       setLoading(false);
     }
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(err => err.field === fieldName);
   };
 
   return (
@@ -223,9 +291,22 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
             {collegeId ? 'Edit College' : 'Add New College'}
           </h2>
 
+          {/* General Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800">{error}</p>
+              <div className="flex items-start space-x-3">
+                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-red-800 font-medium">{error}</p>
+                  {validationErrors.length > 0 && (
+                    <ul className="mt-2 space-y-1 text-sm text-red-700">
+                      {validationErrors.map((err, idx) => (
+                        <li key={idx}>• {err.message}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -234,13 +315,16 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
             <div>
               <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
               <div className="grid md:grid-cols-2 gap-4">
-                <Input
-                  label="College Name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                  placeholder="St. Mary's College of Nursing"
-                />
+                <div>
+                  <Input
+                    label="College Name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                    placeholder="St. Mary's College of Nursing"
+                    error={getFieldError('name')?.message}
+                  />
+                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -258,13 +342,16 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   </select>
                 </div>
 
-                <Input
-                  label="Location"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  required
-                  placeholder="Kochi, Kerala"
-                />
+                <div>
+                  <Input
+                    label="Location"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    required
+                    placeholder="Kochi, Kerala"
+                    error={getFieldError('location')?.message}
+                  />
+                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -289,6 +376,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
                   required
                   placeholder="Brief description for listing page"
+                  error={getFieldError('shortDescription')?.message}
                 />
               </div>
 
@@ -300,10 +388,13 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   value={formData.about}
                   onChange={(e) => setFormData({ ...formData, about: e.target.value })}
                   rows={8}
-                  className="textarea"
+                  className={`textarea ${getFieldError('about') ? 'border-red-500' : ''}`}
                   required
                   placeholder="Detailed information about the college..."
                 />
+                {getFieldError('about') && (
+                  <p className="mt-1 text-sm text-red-600">{getFieldError('about')?.message}</p>
+                )}
               </div>
             </div>
 
@@ -314,6 +405,12 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                 <p className="text-sm text-gray-600 mb-4">
                   Select all nursing courses offered by this college <span className="text-red-500">*</span>
                 </p>
+
+                {getFieldError('courses') && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <span className="text-sm text-red-800 block">{getFieldError('courses')?.message}</span>
+                  </div>
+                )}
 
                 <div className="grid md:grid-cols-2 gap-3">
                   {NURSING_COURSES.map((course) => (
@@ -382,18 +479,17 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                 </label>
 
                 {formData.thumbnailUrl ? (
-                  <div className="relative w-full max-w-md">
+                  <div className="relative w-full max-w-md h-64">
                     <Image
                       src={formData.thumbnailUrl}
                       alt="Thumbnail"
-                      width={400}
-                      height={300}
+                      fill
                       className="rounded-lg object-cover"
                     />
                     <button
                       type="button"
                       onClick={removeThumbnail}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 z-10"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -426,18 +522,17 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                   {formData.galleryUrls.map((url: string, index: number) => (
-                    <div key={index} className="relative">
+                    <div key={index} className="relative w-full h-32">
                       <Image
                         src={url}
                         alt={`Gallery ${index + 1}`}
-                        width={200}
-                        height={150}
-                        className="rounded-lg object-cover w-full h-32"
+                        fill
+                        className="rounded-lg object-cover"
                       />
                       <button
                         type="button"
                         onClick={() => removeGalleryImage(index)}
-                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-10"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -489,6 +584,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   onChange={(e) => setFormData({ ...formData, tuition: e.target.value })}
                   required
                   placeholder="85000"
+                  error={getFieldError('tuition')?.message}
                 />
 
                 <Input
@@ -498,6 +594,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   onChange={(e) => setFormData({ ...formData, hostel: e.target.value })}
                   required
                   placeholder="45000"
+                  error={getFieldError('hostel')?.message}
                 />
 
                 <Input
@@ -507,6 +604,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   onChange={(e) => setFormData({ ...formData, other: e.target.value })}
                   required
                   placeholder="15000"
+                  error={getFieldError('other')?.message}
                 />
 
                 <Input
@@ -524,12 +622,15 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
               <h3 className="text-lg font-semibold mb-4">Additional Settings</h3>
               <div className="space-y-4">
                 <Input
-                  label="Google Form URL (for applications)"
+                  label="Google Form URL (Optional)"
                   type="url"
                   value={formData.googleFormUrl}
                   onChange={(e) => setFormData({ ...formData, googleFormUrl: e.target.value })}
                   placeholder="https://forms.gle/..."
                 />
+                <p className="text-xs text-gray-500 -mt-2">
+                  Leave empty if you don't have an application form yet
+                </p>
 
                 <div className="flex items-center space-x-2">
                   <input

@@ -15,8 +15,9 @@ import {
   User
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { NotificationProvider, useNotifications } from '@/context/NotificationContext';
 
-export default function AdminLayout({
+function AdminLayoutContent({
   children,
 }: {
   children: React.ReactNode;
@@ -26,7 +27,7 @@ export default function AdminLayout({
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState<any>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [notifications, setNotifications] = useState(0);
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     checkAuth();
@@ -45,27 +46,6 @@ export default function AdminLayout({
       router.push('/admin/login');
     } finally {
       setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (admin) {
-      fetchNotifications();
-      // Poll for new notifications every 30 seconds
-      const interval = setInterval(fetchNotifications, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [admin]);
-
-  const fetchNotifications = async () => {
-    try {
-      const response = await fetch('/api/notifications');
-      const data = await response.json();
-      if (response.ok) {
-        setNotifications(data.unreadCount);
-      }
-    } catch (error) {
-      console.error('Failed to fetch notifications');
     }
   };
 
@@ -100,7 +80,7 @@ export default function AdminLayout({
       href: '/admin/consultations',
       icon: MessageSquare,
       label: 'Consultations',
-      badge: notifications > 0 ? notifications : undefined
+      badge: unreadCount > 0 ? unreadCount : undefined
     },
     { href: '/admin/settings', icon: Settings, label: 'Settings' },
   ];
@@ -150,7 +130,7 @@ export default function AdminLayout({
                   <span>{item.label}</span>
                 </div>
                 {item.badge !== undefined && (
-                  <span className="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                  <span className="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1 min-w-[24px] text-center">
                     {item.badge}
                   </span>
                 )}
@@ -182,9 +162,22 @@ export default function AdminLayout({
               {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
             <h1 className="text-xl font-bold">Promise India Education</h1>
-            <Link href="/" target="_blank">
-              <Button variant="outline" size="sm">View Site</Button>
-            </Link>
+            <div className="flex items-center gap-4">
+              {/* Notification Bell */}
+              {unreadCount > 0 && (
+                <Link href="/admin/consultations">
+                  <button className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <MessageSquare className="h-5 w-5 text-gray-700" />
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  </button>
+                </Link>
+              )}
+              <Link href="/" target="_blank">
+                <Button variant="outline" size="sm">View Site</Button>
+              </Link>
+            </div>
           </div>
         </header>
 
@@ -202,5 +195,17 @@ export default function AdminLayout({
         />
       )}
     </div>
+  );
+}
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <NotificationProvider>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </NotificationProvider>
   );
 }
