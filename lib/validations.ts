@@ -9,7 +9,16 @@ export const consultationSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   phone: z.string().min(10, 'Please enter a valid phone number'),
   email: z.string().email('Invalid email address'),
+  fatherOccupation: z.string().optional(),
+  dateOfBirth: z.string().optional().transform(val => {
+    if (!val) return null;
+    return new Date(val);
+  }),
+  gender: z.string().optional(),
+  state: z.string().optional(),
   city: z.string().optional(),
+  branch: z.string().optional(),
+  preferredCourse: z.string().optional(),
   message: z.string().optional(),
 });
 

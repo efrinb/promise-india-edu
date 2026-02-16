@@ -6,12 +6,47 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
+const INDIAN_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+  'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+  'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+  'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
+  'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+  'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli',
+  'Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+];
+
+const BRANCHES = [
+  'Biomaths',
+  'Computer Science',
+  'Commerce',
+  'Humanities',
+  'Others'
+];
+
+const NURSING_COURSES = [
+  'GNM (General Nursing and Midwifery)',
+  'BSc Nursing',
+  'MSc Nursing',
+  'Post Basic BSc Nursing',
+  'ANM (Auxiliary Nurse Midwifery)',
+  'Diploma in Nursing',
+  'Certificate in Nursing',
+  'Other'
+];
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
+    fatherOccupation: '',
+    dateOfBirth: '',
+    gender: '',
+    state: '',
     city: '',
+    branch: '',
+    preferredCourse: '',
     message: '',
   });
   const [loading, setLoading] = useState(false);
@@ -52,10 +87,22 @@ export default function ContactPage() {
 
       if (response.ok) {
         setSuccess(true);
-        setFormData({ name: '', phone: '', email: '', city: '', message: '' });
-        // Auto-hide success message after 5 seconds
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          fatherOccupation: '',
+          dateOfBirth: '',
+          gender: '',
+          state: '',
+          city: '',
+          branch: '',
+          preferredCourse: '',
+          message: '',
+        });
         setTimeout(() => setSuccess(false), 5000);
       } else {
+        console.error('Data:', data);
         setError(data.error || 'Failed to submit. Please try again.');
       }
     } catch (err) {
@@ -94,50 +141,159 @@ export default function ContactPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input
-                label="Full Name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                placeholder="Enter your full name"
-              />
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Personal Information */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-primary">Personal Information</h3>
+                <div className="space-y-4">
+                  <Input
+                    label="Full Name"
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                    placeholder="Enter your full name"
+                  />
 
-              <Input
-                label="Phone Number"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                required
-                placeholder="+91 9876543210"
-              />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <Input
+                      label="Phone Number"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      required
+                      placeholder="+91 9876543210"
+                    />
 
-              <Input
-                label="Email Address"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                placeholder="your.email@example.com"
-              />
+                    <Input
+                      label="Email Address"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
 
-              <Input
-                label="City"
-                type="text"
-                value={formData.city}
-                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                placeholder="Your city"
-              />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <Input
+                      label="Date of Birth"
+                      type="date"
+                      value={formData.dateOfBirth}
+                      onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
+                      placeholder="DD/MM/YYYY"
+                    />
 
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Gender
+                      </label>
+                      <select
+                        value={formData.gender}
+                        onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                        className="input"
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <Input
+                    label="Father's Occupation"
+                    type="text"
+                    value={formData.fatherOccupation}
+                    onChange={(e) => setFormData({ ...formData, fatherOccupation: e.target.value })}
+                    placeholder="e.g., Teacher, Businessman, Doctor"
+                  />
+                </div>
+              </div>
+
+              {/* Location Information */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-primary">Location</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      State
+                    </label>
+                    <select
+                      value={formData.state}
+                      onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                      className="input"
+                    >
+                      <option value="">Select State</option>
+                      {INDIAN_STATES.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <Input
+                    label="City"
+                    type="text"
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    placeholder="Enter your city"
+                  />
+                </div>
+              </div>
+
+              {/* Educational Information */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-primary">Educational Background</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Branch/Stream
+                    </label>
+                    <select
+                      value={formData.branch}
+                      onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
+                      className="input"
+                    >
+                      <option value="">Select Branch</option>
+                      {BRANCHES.map((branch) => (
+                        <option key={branch} value={branch}>
+                          {branch}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Preferred Course
+                    </label>
+                    <select
+                      value={formData.preferredCourse}
+                      onChange={(e) => setFormData({ ...formData, preferredCourse: e.target.value })}
+                      className="input"
+                    >
+                      <option value="">Select Preferred Course</option>
+                      {NURSING_COURSES.map((course) => (
+                        <option key={course} value={course}>
+                          {course}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Message */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Message
+                  Additional Message (Optional)
                 </label>
                 <textarea
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  rows={5}
+                  rows={4}
                   className="textarea"
                   placeholder="Tell us about your interests and questions..."
                 />
@@ -202,7 +358,7 @@ export default function ContactPage() {
               </div>
             </Card>
 
-            {/* WhatsApp - Only show if URL exists */}
+            {/* WhatsApp */}
             {settings?.whatsappUrl && (
               <Card className="p-6 bg-green-50 border-green-200">
                 <div className="flex items-start space-x-4">
@@ -259,8 +415,8 @@ export default function ContactPage() {
               </p>
             </Card>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </div >
   );
 }
