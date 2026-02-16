@@ -134,7 +134,7 @@ export default function AdminConsultationsPage() {
                   </span>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <div className="grid md:grid-cols-3 gap-4 mb-4">
                   <div className="flex items-center gap-2 text-sm">
                     <Phone className="h-4 w-4 text-gray-400" />
                     <a href={`tel:${consultation.phone}`} className="text-primary hover:underline">
@@ -147,10 +147,42 @@ export default function AdminConsultationsPage() {
                       {consultation.email}
                     </a>
                   </div>
-                  {consultation.city && (
+                  {consultation.gender && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-gray-600">Gender:</span>
+                      <span className="font-medium">{consultation.gender}</span>
+                    </div>
+                  )}
+                  {consultation.dateOfBirth && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-gray-600">DOB:</span>
+                      <span className="font-medium">
+                        {new Date(consultation.dateOfBirth).toLocaleDateString('en-IN')}
+                      </span>
+                    </div>
+                  )}
+                  {consultation.state && (
                     <div className="flex items-center gap-2 text-sm">
                       <MapPin className="h-4 w-4 text-gray-400" />
-                      <span>{consultation.city}</span>
+                      <span>{consultation.city}, {consultation.state}</span>
+                    </div>
+                  )}
+                  {consultation.fatherOccupation && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-gray-600">Father's Occupation:</span>
+                      <span className="font-medium">{consultation.fatherOccupation}</span>
+                    </div>
+                  )}
+                  {consultation.branch && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-gray-600">Branch:</span>
+                      <span className="font-medium">{consultation.branch}</span>
+                    </div>
+                  )}
+                  {consultation.preferredCourse && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-gray-600">Preferred Course:</span>
+                      <span className="font-medium">{consultation.preferredCourse}</span>
                     </div>
                   )}
                 </div>

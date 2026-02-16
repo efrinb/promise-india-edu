@@ -22,15 +22,21 @@ export interface College {
   updatedAt: Date;
 }
 
-export interface Consultation {  // Fixed: Changed from lowercase 'consultation' to 'Consultation'
+export interface Consultation {
   id: string;
   name: string;
   phone: string;
   email: string;
+  fatherOccupation: string | null;
+  dateOfBirth: Date | null;
+  gender: string | null;
+  state: string | null;
   city: string | null;
+  branch: string | null;
+  preferredCourse: string | null;
   message: string | null;
   status: string;
-  notified: boolean;  // Add this line (for notification tracking)
+  notified: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
