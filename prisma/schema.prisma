@@ -33,7 +33,7 @@ model College {
   shortDescription String
   about            String   @db.Text
   courses          String[] @default([])
-  fees             Json
+  fees             Json     // { year1, year2, year3, year4, hostel, other, total }
   featured         Boolean  @default(false)
   thumbnailUrl     String?
   galleryUrls      String[] @default([])

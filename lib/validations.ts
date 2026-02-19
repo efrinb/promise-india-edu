@@ -24,22 +24,24 @@ export const consultationSchema = z.object({
 
 export const collegeSchema = z.object({
   name: z.string().min(3, 'College name must be at least 3 characters'),
-  category: z.enum(['Nursing', 'Abroad', 'Other']),
+  category: z.enum(['Nursing', 'Physiotherapy', 'Abroad', 'Other']),
   location: z.string().min(3, 'Location is required'),
   shortDescription: z.string().min(10, 'Short description must be at least 10 characters'),
   about: z.string().min(50, 'About section must be at least 50 characters'),
   courses: z.array(z.string()).default([]),
   fees: z.object({
-    tuition: z.number().min(0),
-    hostel: z.number().min(0),
-    other: z.number().min(0),
+    year1: z.number().min(0),
+    year2: z.number().min(0),
+    year3: z.number().min(0),
+    year4: z.number().min(0),
+    hostel: z.number().min(0).optional(),
+    other: z.number().min(0).optional(),
     total: z.number().min(0),
   }),
   featured: z.boolean().default(false),
   thumbnailUrl: z.string().nullable().optional(),
   galleryUrls: z.array(z.string()).default([]),
   googleFormUrl: z.string().nullable().optional().transform(val => {
-    // Transform empty string to null
     if (val === '' || val === undefined) return null;
     return val;
   }),

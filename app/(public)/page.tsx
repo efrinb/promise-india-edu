@@ -177,7 +177,10 @@ export default async function HomePage() {
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 {featuredColleges.map((college) => (
-                  <Card key={college.id} className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <Card
+                    key={college.id}
+                    className="overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
+                  >
                     {/* College Image */}
                     <div className="relative aspect-video overflow-hidden">
                       {college.thumbnailUrl ? (
@@ -193,7 +196,6 @@ export default async function HomePage() {
                         </div>
                       )}
 
-                      {/* Featured Badge */}
                       <div className="absolute top-3 right-3">
                         <span className="bg-accent text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                           Featured
@@ -201,7 +203,8 @@ export default async function HomePage() {
                       </div>
                     </div>
 
-                    <div className="p-6">
+                    {/* Content */}
+                    <div className="p-6 flex flex-col flex-1">
                       <div className="flex items-start space-x-2 text-sm text-gray-600 mb-2">
                         <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
                         <span>{college.location}</span>
@@ -236,19 +239,22 @@ export default async function HomePage() {
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between mb-4 pb-4 border-b">
-                        <span className="text-sm text-gray-600">Annual Fee:</span>
-                        <span className="text-lg font-bold text-primary">
-                          {formatCurrency((college.fees as any).total)}
-                        </span>
-                      </div>
+                      {/* Bottom Section Always Stays Down */}
+                      <div className="mt-auto">
+                        <div className="flex items-center justify-between mb-4 pb-4 border-b">
+                          <span className="text-sm text-gray-600">Total Course Fee:</span>
+                          <span className="text-lg font-bold text-primary">
+                            {formatCurrency((college.fees as any)?.total || 0)}
+                          </span>
+                        </div>
 
-                      <Link href={`/colleges/${college.slug}`}>
-                        <Button variant="primary" className="w-full">
-                          View Details
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
+                        <Link href={`/colleges/${college.slug}`}>
+                          <Button variant="primary" className="w-full">
+                            View Details
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </Card>
                 ))}
