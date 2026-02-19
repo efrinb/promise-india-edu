@@ -24,6 +24,13 @@ const NURSING_COURSES = [
   'Certificate in Nursing',
 ];
 
+const PHYSIOTHERAPY_COURSES = [
+  'BPT (Bachelor of Physiotherapy)',
+  'MPT (Master of Physiotherapy)',
+  'Diploma in Physiotherapy',
+  'Certificate in Physiotherapy',
+];
+
 interface ValidationError {
   field: string;
   message: string;
@@ -43,7 +50,10 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
     shortDescription: initialData?.shortDescription || '',
     about: initialData?.about || '',
     courses: (initialData?.courses || []) as string[],
-    tuition: initialData?.fees?.tuition || 0,
+    year1: initialData?.fees?.year1 || 0,
+    year2: initialData?.fees?.year2 || 0,
+    year3: initialData?.fees?.year3 || 0,
+    year4: initialData?.fees?.year4 || 0,
     hostel: initialData?.fees?.hostel || 0,
     other: initialData?.fees?.other || 0,
     total: initialData?.fees?.total || 0,
@@ -56,9 +66,15 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
   // Auto-calculate total fees
   useEffect(() => {
-    const total = Number(formData.tuition) + Number(formData.hostel) + Number(formData.other);
+    const total =
+      Number(formData.year1) +
+      Number(formData.year2) +
+      Number(formData.year3) +
+      Number(formData.year4) +
+      (Number(formData.hostel) || 0) +
+      (Number(formData.other) || 0);
     setFormData(prev => ({ ...prev, total }));
-  }, [formData.tuition, formData.hostel, formData.other]);
+  }, [formData.year1, formData.year2, formData.year3, formData.year4, formData.hostel, formData.other]);
 
   const toggleCourse = (course: string) => {
     setFormData(prev => ({
@@ -89,22 +105,23 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
       errors.push({ field: 'about', message: 'About section must be at least 50 characters' });
     }
 
-    // Nursing courses validation
-    if (formData.category === 'Nursing' && formData.courses.length === 0) {
-      errors.push({ field: 'courses', message: 'Please select at least one nursing course' });
+    // Courses validation
+    if ((formData.category === 'Nursing' || formData.category === 'Physiotherapy') && formData.courses.length === 0) {
+      errors.push({ field: 'courses', message: `Please select at least one ${formData.category.toLowerCase()} course` });
     }
 
     // Fee validation
-    if (Number(formData.tuition) <= 0) {
-      errors.push({ field: 'tuition', message: 'Tuition fee must be greater than 0' });
+    if (Number(formData.year1) <= 0) {
+      errors.push({ field: 'year1', message: '1st year fee must be greater than 0' });
     }
-
-    if (Number(formData.hostel) <= 0) {
-      errors.push({ field: 'hostel', message: 'Hostel fee must be greater than 0' });
+    if (Number(formData.year2) <= 0) {
+      errors.push({ field: 'year2', message: '2nd year fee must be greater than 0' });
     }
-
-    if (Number(formData.other) < 0) {
-      errors.push({ field: 'other', message: 'Other fees cannot be negative' });
+    if (Number(formData.year3) <= 0) {
+      errors.push({ field: 'year3', message: '3rd year fee must be greater than 0' });
+    }
+    if (Number(formData.year4) <= 0) {
+      errors.push({ field: 'year4', message: '4th year fee must be greater than 0' });
     }
 
     setValidationErrors(errors);
@@ -215,9 +232,12 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
         about: formData.about.trim(),
         courses: formData.courses,
         fees: {
-          tuition: Number(formData.tuition),
-          hostel: Number(formData.hostel),
-          other: Number(formData.other),
+          year1: Number(formData.year1),
+          year2: Number(formData.year2),
+          year3: Number(formData.year3),
+          year4: Number(formData.year4),
+          hostel: Number(formData.hostel) || 0,
+          other: Number(formData.other) || 0,
           total: Number(formData.total),
         },
         featured: formData.featured,
@@ -332,11 +352,12 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value, courses: [] })}
                     className="input"
                     required
                   >
                     <option value="Nursing">Nursing</option>
+                    <option value="Physiotherapy">Physiotherapy</option>
                     <option value="Abroad">Abroad Education</option>
                     <option value="Other">Other</option>
                   </select>
@@ -398,12 +419,12 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
               </div>
             </div>
 
-            {/* Courses Offered - Only show for Nursing category */}
-            {formData.category === 'Nursing' && (
+            {/* Courses Offered - Show for Nursing or Physiotherapy */}
+            {(formData.category === 'Nursing' || formData.category === 'Physiotherapy') && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Courses Offered</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Select all nursing courses offered by this college <span className="text-red-500">*</span>
+                  Select all {formData.category.toLowerCase()} courses offered by this college <span className="text-red-500">*</span>
                 </p>
 
                 {getFieldError('courses') && (
@@ -413,7 +434,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                 )}
 
                 <div className="grid md:grid-cols-2 gap-3">
-                  {NURSING_COURSES.map((course) => (
+                  {(formData.category === 'Nursing' ? NURSING_COURSES : PHYSIOTHERAPY_COURSES).map((course) => (
                     <div
                       key={course}
                       onClick={() => toggleCourse(course)}
@@ -441,6 +462,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   ))}
                 </div>
 
+                {/* Selected Courses Display */}
                 {formData.courses.length > 0 && (
                   <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <p className="text-sm text-blue-900 font-medium mb-2">
@@ -576,44 +598,80 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
             {/* Fee Structure */}
             <div>
               <h3 className="text-lg font-semibold mb-4">Fee Structure (Annual)</h3>
-              <div className="grid md:grid-cols-2 gap-4">
+
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
                 <Input
-                  label="Tuition Fee"
+                  label="1st Year Fee"
                   type="number"
-                  value={formData.tuition}
-                  onChange={(e) => setFormData({ ...formData, tuition: e.target.value })}
+                  value={formData.year1}
+                  onChange={(e) => setFormData({ ...formData, year1: e.target.value })}
                   required
                   placeholder="85000"
-                  error={getFieldError('tuition')?.message}
+                  error={getFieldError('year1')?.message}
                 />
 
                 <Input
-                  label="Hostel Fee"
+                  label="2nd Year Fee"
                   type="number"
-                  value={formData.hostel}
-                  onChange={(e) => setFormData({ ...formData, hostel: e.target.value })}
+                  value={formData.year2}
+                  onChange={(e) => setFormData({ ...formData, year2: e.target.value })}
                   required
-                  placeholder="45000"
-                  error={getFieldError('hostel')?.message}
+                  placeholder="85000"
+                  error={getFieldError('year2')?.message}
                 />
 
                 <Input
-                  label="Other Fees"
+                  label="3rd Year Fee"
                   type="number"
-                  value={formData.other}
-                  onChange={(e) => setFormData({ ...formData, other: e.target.value })}
+                  value={formData.year3}
+                  onChange={(e) => setFormData({ ...formData, year3: e.target.value })}
                   required
-                  placeholder="15000"
-                  error={getFieldError('other')?.message}
+                  placeholder="85000"
+                  error={getFieldError('year3')?.message}
                 />
 
                 <Input
-                  label="Total Fee (Auto-calculated)"
+                  label="4th Year Fee"
                   type="number"
-                  value={formData.total}
-                  disabled
-                  className="bg-gray-100"
+                  value={formData.year4}
+                  onChange={(e) => setFormData({ ...formData, year4: e.target.value })}
+                  required
+                  placeholder="85000"
+                  error={getFieldError('year4')?.message}
                 />
+              </div>
+
+              <div className="border-t pt-4 mb-4">
+                <h4 className="text-md font-semibold mb-4 text-gray-700">Additional Fees (Optional)</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Input
+                    label="Hostel Fee (Annual)"
+                    type="number"
+                    value={formData.hostel}
+                    onChange={(e) => setFormData({ ...formData, hostel: e.target.value })}
+                    placeholder="45000"
+                  />
+
+                  <Input
+                    label="Other Fees (Annual)"
+                    type="number"
+                    value={formData.other}
+                    onChange={(e) => setFormData({ ...formData, other: e.target.value })}
+                    placeholder="15000"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold text-gray-900">Total Course Fee (4 Years)</span>
+                  <span className="text-2xl font-bold text-primary">
+                    ₹{formData.total.toLocaleString('en-IN')}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  Auto-calculated based on all fee components
+                </p>
               </div>
             </div>
 

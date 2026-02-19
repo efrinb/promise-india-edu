@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { prisma } from '@/lib/db';
 import { formatCurrency } from '@/lib/utils';
+import ImagePreview from '@/components/ui/ImagePreview';
 
 async function getCollege(slug: string) {
   const college = await prisma.college.findUnique({
@@ -66,12 +67,12 @@ export default async function CollegeDetailPage({
             <Card>
               {college.thumbnailUrl ? (
                 <div className="relative w-full aspect-video">
-                  <Image
-                    src={college.thumbnailUrl}
-                    alt={college.name}
-                    fill
-                    className="object-cover rounded-t-xl"
-                  />
+                  <div className="relative w-full aspect-video">
+                    <ImagePreview
+                      src={college.thumbnailUrl}
+                      alt={college.name}
+                    />
+                  </div>
                 </div>
               ) : (
                 <div className="aspect-video bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -88,11 +89,10 @@ export default async function CollegeDetailPage({
                   {college.galleryUrls.map((url: string, index: number) => (
                     <Card key={index} className="overflow-hidden">
                       <div className="relative w-full h-48">
-                        <Image
+                        <ImagePreview
                           src={url}
                           alt={`${college.name} - Image ${index + 1}`}
-                          fill
-                          className="object-cover hover:scale-105 transition-transform duration-300"
+                          className="relative w-full h-48"
                         />
                       </div>
                     </Card>
@@ -130,23 +130,55 @@ export default async function CollegeDetailPage({
           <div className="space-y-6">
             {/* Fee Structure */}
             <Card className="p-6">
-              <h3 className="text-xl font-bold mb-4">Fee Structure (Annual)</h3>
+              <h3 className="text-xl font-bold mb-4">Fee Structure</h3>
+
               <div className="space-y-3">
+                {/* Year-wise Fees */}
                 <div className="flex justify-between pb-2 border-b">
-                  <span className="text-gray-600">Tuition Fee</span>
-                  <span className="font-semibold">{formatCurrency(fees.tuition)}</span>
+                  <span className="text-gray-600">1st Year</span>
+                  <span className="font-semibold">{formatCurrency(fees?.year1 || 0)}</span>
                 </div>
+
                 <div className="flex justify-between pb-2 border-b">
-                  <span className="text-gray-600">Hostel Fee</span>
-                  <span className="font-semibold">{formatCurrency(fees.hostel)}</span>
+                  <span className="text-gray-600">2nd Year</span>
+                  <span className="font-semibold">{formatCurrency(fees?.year2 || 0)}</span>
                 </div>
+
                 <div className="flex justify-between pb-2 border-b">
-                  <span className="text-gray-600">Other Fees</span>
-                  <span className="font-semibold">{formatCurrency(fees.other)}</span>
+                  <span className="text-gray-600">3rd Year</span>
+                  <span className="font-semibold">{formatCurrency(fees?.year3 || 0)}</span>
                 </div>
-                <div className="flex justify-between pt-2 text-lg">
-                  <span className="font-bold">Total Annual Fee</span>
-                  <span className="font-bold text-primary">{formatCurrency(fees.total)}</span>
+
+                <div className="flex justify-between pb-2 border-b">
+                  <span className="text-gray-600">4th Year</span>
+                  <span className="font-semibold">{formatCurrency(fees?.year4 || 0)}</span>
+                </div>
+
+                {/* Additional Fees */}
+                {fees?.hostel > 0 && (
+                  <div className="flex justify-between pb-2 border-b">
+                    <span className="text-gray-600">Hostel (Annual)</span>
+                    <span className="font-semibold">
+                      {formatCurrency(fees.hostel)}
+                    </span>
+                  </div>
+                )}
+
+                {fees?.other > 0 && (
+                  <div className="flex justify-between pb-2 border-b">
+                    <span className="text-gray-600">Other Fees</span>
+                    <span className="font-semibold">
+                      {formatCurrency(fees.other)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Total */}
+                <div className="flex justify-between pt-3 text-lg">
+                  <span className="font-bold">Total Course Fee (4 Years)</span>
+                  <span className="font-bold text-primary">
+                    {formatCurrency(fees?.total || 0)}
+                  </span>
                 </div>
               </div>
             </Card>

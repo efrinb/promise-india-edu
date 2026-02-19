@@ -99,7 +99,10 @@ export default function CollegesPage() {
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {colleges.map((college) => (
-                <Card key={college.id} className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <Card
+                  key={college.id}
+                  className="overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col"
+                >
                   {/* College Image */}
                   <div className="relative aspect-video overflow-hidden">
                     {college.thumbnailUrl ? (
@@ -115,7 +118,6 @@ export default function CollegesPage() {
                       </div>
                     )}
 
-                    {/* Featured Badge */}
                     {college.featured && (
                       <div className="absolute top-3 right-3">
                         <span className="bg-accent text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
@@ -124,7 +126,6 @@ export default function CollegesPage() {
                       </div>
                     )}
 
-                    {/* Category Badge */}
                     <div className="absolute bottom-3 left-3">
                       <span className="bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-xs font-semibold">
                         {college.category}
@@ -132,7 +133,8 @@ export default function CollegesPage() {
                     </div>
                   </div>
 
-                  <div className="p-6">
+                  {/* Content Wrapper */}
+                  <div className="p-6 flex flex-col flex-1">
                     <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
                       <MapPin className="h-4 w-4" />
                       <span>{college.location}</span>
@@ -146,7 +148,6 @@ export default function CollegesPage() {
                       {college.shortDescription}
                     </p>
 
-                    {/* Courses Badge (if available) */}
                     {college.courses && college.courses.length > 0 && (
                       <div className="mb-4">
                         <p className="text-xs text-gray-500 mb-2">Courses Offered:</p>
@@ -168,19 +169,22 @@ export default function CollegesPage() {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between mb-4 pb-4 border-b">
-                      <span className="text-sm text-gray-600">Annual Fee:</span>
-                      <span className="text-lg font-bold text-primary">
-                        {formatCurrency((college.fees as any).total)}
-                      </span>
-                    </div>
+                    {/* Push bottom section down */}
+                    <div className="mt-auto">
+                      <div className="flex items-center justify-between mb-4 pb-4 border-b">
+                        <span className="text-sm text-gray-600">Total Course Fee:</span>
+                        <span className="text-lg font-bold text-primary">
+                          {formatCurrency((college.fees as any)?.total || 0)}
+                        </span>
+                      </div>
 
-                    <Link href={`/colleges/${college.slug}`}>
-                      <Button variant="primary" className="w-full">
-                        View Details
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
+                      <Link href={`/colleges/${college.slug}`}>
+                        <Button variant="primary" className="w-full">
+                          View Details
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </Card>
               ))}
