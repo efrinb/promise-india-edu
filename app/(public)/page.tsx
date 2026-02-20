@@ -13,6 +13,9 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { AdmissionBadge } from '@/components/public/AdmissionBadge';
+import { Statistics } from '@/components/public/Statistics';
+import { Testimonials } from '@/components/public/Testimonials';
 import { prisma } from '@/lib/db';
 import { formatCurrency } from '@/lib/utils';
 
@@ -51,12 +54,12 @@ export default async function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/colleges">
-                  <Button variant="accent" size="lg">
+                  <Button variant="secondary" size="lg">
                     Explore Colleges
                   </Button>
                 </Link>
-                <Link href="/contact">
-                  <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
+                <Link href="/contact?type=consultation&source=homepage">
+                  <Button variant="danger" size="lg">
                     Get Free Consultation
                   </Button>
                 </Link>
@@ -72,7 +75,7 @@ export default async function HomePage() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="section bg-gray-50">
+      <section className="section bg-background dark:bg-gray-900">
         <div className="container-custom">
           <div className="grid md:grid-cols-2 gap-8">
             <Card className="p-8">
@@ -82,7 +85,7 @@ export default async function HomePage() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-text-light dark:text-gray-400 leading-relaxed">
                     To empower aspiring nurses with access to quality education by providing comprehensive guidance,
                     transparent information, and unwavering support throughout their admission journey to the best
                     nursing institutions in India.
@@ -97,7 +100,7 @@ export default async function HomePage() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-text-light dark:text-gray-400 leading-relaxed">
                     To become India's most trusted education consultancy, known for ethical practices, student-first
                     approach, and contributing to building a skilled nursing workforce that serves the nation with
                     excellence and compassion.
@@ -109,53 +112,56 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Statistics Section */}
+      <Statistics />
+
       {/* Why Choose Us */}
-      <section className="section">
+      <section className="section bg-background dark:bg-gray-900">
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Promise India?</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-text-light max-w-3xl mx-auto">
               We stand out with our commitment to transparency, personalized care, and proven track record.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="p-6 text-center hover:shadow-xl transition-shadow duration-300">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="h-8 w-8 text-primary" />
               </div>
               <h4 className="text-xl font-bold mb-3">Verified Colleges</h4>
-              <p className="text-gray-600">
+              <p className="text-text-light dark:text-gray-400">
                 Only accredited and recognized nursing institutions with proven track records.
               </p>
             </Card>
 
-            <Card className="p-6 text-center hover:shadow-xl transition-shadow duration-300">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <DollarSign className="h-8 w-8 text-secondary" />
               </div>
               <h4 className="text-xl font-bold mb-3">Transparent Fee Structure</h4>
-              <p className="text-gray-600">
+              <p className="text-text-light dark:text-gray-400">
                 Clear, upfront fee information with no hidden charges or surprises.
               </p>
             </Card>
 
-            <Card className="p-6 text-center hover:shadow-xl transition-shadow duration-300">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="h-8 w-8 text-accent" />
               </div>
               <h4 className="text-xl font-bold mb-3">Personalized Counseling</h4>
-              <p className="text-gray-600">
+              <p className="text-text-light dark:text-gray-400">
                 One-on-one guidance tailored to your academic background and career goals.
               </p>
             </Card>
 
-            <Card className="p-6 text-center hover:shadow-xl transition-shadow duration-300">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="h-8 w-8 text-primary" />
               </div>
               <h4 className="text-xl font-bold mb-3">End-to-End Support</h4>
-              <p className="text-gray-600">
+              <p className="text-text-light dark:text-gray-400">
                 Complete assistance from college selection to admission completion.
               </p>
             </Card>
@@ -164,11 +170,11 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Colleges */}
-      <section className="section bg-gray-50">
+      <section className="section bg-white dark:bg-gray-800">
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Top Nursing Colleges</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-text-light max-w-3xl mx-auto">
               Explore our featured nursing institutions offering excellent education and facilities.
             </p>
           </div>
@@ -177,11 +183,7 @@ export default async function HomePage() {
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 {featuredColleges.map((college) => (
-                  <Card
-                    key={college.id}
-                    className="overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
-                  >
-                    {/* College Image */}
+                  <Card key={college.id} className="overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
                     <div className="relative aspect-video overflow-hidden">
                       {college.thumbnailUrl ? (
                         <Image
@@ -196,17 +198,25 @@ export default async function HomePage() {
                         </div>
                       )}
 
-                      <div className="absolute top-3 right-3">
-                        <span className="bg-accent text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                          Featured
+                      <div className="absolute top-3 left-3 flex flex-col gap-2">
+                        {college.featured && (
+                          <span className="bg-accent text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                            Featured
+                          </span>
+                        )}
+                        <AdmissionBadge status={college.admissionStatus as any} />
+                      </div>
+
+                      <div className="absolute bottom-3 left-3">
+                        <span className="bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-xs font-semibold">
+                          {college.category}
                         </span>
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="p-6 flex flex-col flex-1">
-                      <div className="flex items-start space-x-2 text-sm text-gray-600 mb-2">
-                        <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
+                        <MapPin className="h-4 w-4" />
                         <span>{college.location}</span>
                       </div>
 
@@ -214,18 +224,18 @@ export default async function HomePage() {
                         {college.name}
                       </h3>
 
-                      <p className="text-gray-600 mb-4 line-clamp-2">
+                      <p className="text-gray-600 mb-4 line-clamp-3">
                         {college.shortDescription}
                       </p>
 
-                      {/* Courses Preview */}
                       {college.courses && college.courses.length > 0 && (
                         <div className="mb-4">
+                          <p className="text-xs text-gray-500 mb-2">Courses Offered:</p>
                           <div className="flex flex-wrap gap-1">
-                            {college.courses.slice(0, 2).map((course: string, idx: number) => (
+                            {college.courses.slice(0, 2).map((course, idx) => (
                               <span
                                 key={idx}
-                                className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium"
+                                className="bg-secondary-50 text-secondary-700 dark:bg-secondary-900 dark:text-secondary-300 px-2 py-1 rounded text-xs font-medium"
                               >
                                 {course.split('(')[0].trim()}
                               </span>
@@ -238,8 +248,6 @@ export default async function HomePage() {
                           </div>
                         </div>
                       )}
-
-                      {/* Bottom Section Always Stays Down */}
                       <div className="mt-auto">
                         <div className="flex items-center justify-between mb-4 pb-4 border-b">
                           <span className="text-sm text-gray-600">Total Course Fee:</span>
@@ -274,7 +282,7 @@ export default async function HomePage() {
               <div className="text-center">
                 <GraduationCap className="h-24 w-24 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold mb-2">No Featured Colleges Yet</h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-text-light mb-6">
                   We're currently updating our featured colleges. Please check back soon!
                 </p>
                 <Link href="/colleges">
@@ -289,8 +297,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <Testimonials />
+
       {/* CTA Strip */}
-      <section className="bg-gradient-primary py-16">
+      <section className="bg-gradient-to-r from-primary to-secondary py-16">
         <div className="container-custom text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Start Your Admission Journey Today
@@ -298,8 +309,8 @@ export default async function HomePage() {
           <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
             Get personalized guidance from our expert counselors and secure your seat in a top nursing college.
           </p>
-          <Link href="/contact">
-            <Button variant="accent" size="lg">
+          <Link href="/contact?type=consultation&source=homepage">
+            <Button variant="danger" size="lg">
               Book Free Consultation
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

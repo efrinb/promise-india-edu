@@ -22,11 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
-      <body>{children}</body>
+      <body className="bg-background dark:bg-gray-900 text-text dark:text-gray-100 transition-colors">
+        {children}
+      </body>
     </html>
   );
 }
