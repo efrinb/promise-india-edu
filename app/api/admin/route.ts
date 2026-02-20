@@ -7,7 +7,7 @@ const adminSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).optional(),
   name: z.string().min(2),
-  role: z.enum(['admin', 'SUPER_ADMIN']).default('admin'),
+  role: z.enum(['admin', 'super_admin']).default('admin'),
   active: z.boolean().default(true),
 });
 

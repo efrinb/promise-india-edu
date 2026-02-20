@@ -231,7 +231,7 @@ export default function AdminDashboardPage() {
         <Card>
           <CardBody>
             <h3 className="text-xl font-bold mb-4">Quick Actions</h3>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               <Link href="/admin/colleges/new">
                 <Button variant="primary" className="w-full">
                   <Plus className="mr-2 h-4 w-4" />

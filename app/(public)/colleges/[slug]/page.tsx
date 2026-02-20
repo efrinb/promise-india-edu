@@ -270,7 +270,7 @@ export default async function CollegeDetailPage({ params }: Props) {
                 </Card>
 
                 {/* CTA Buttons */}
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <Link href={`/contact?type=apply&source=college_detail`}>
                     <Button variant="danger" className="w-full">
                       Apply Now

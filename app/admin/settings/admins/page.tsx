@@ -14,6 +14,8 @@ export default function AdminsManagementPage() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [adminToDelete, setAdminToDelete] = useState<{ id: string; name: string } | null>(null);
     const [currentAdmin, setCurrentAdmin] = useState<any>(null);
+    const [editingAdmin, setEditingAdmin] = useState<any>(null);
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -55,22 +57,37 @@ export default function AdminsManagementPage() {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/admin', {
-                method: 'POST',
+            const method = editingAdmin ? 'PUT' : 'POST';
+            const url = editingAdmin
+                ? `/api/admin/${editingAdmin.id}`
+                : '/api/admin';
+
+            const response = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    ...formData,
+                    password: formData.password || undefined,
+                }),
             });
 
             if (response.ok) {
                 setShowForm(false);
-                setFormData({ email: '', password: '', name: '', role: 'admin', active: true });
+                setEditingAdmin(null);
+                setFormData({
+                    email: '',
+                    password: '',
+                    name: '',
+                    role: 'admin',
+                    active: true,
+                });
                 fetchAdmins();
             } else {
                 const data = await response.json();
-                alert(data.error || 'Failed to create admin');
+                alert(data.error || 'Failed to save admin');
             }
         } catch (error) {
-            alert('Error creating admin');
+            alert('Error saving admin');
         }
     };
 
@@ -153,7 +170,9 @@ export default function AdminsManagementPage() {
             {showForm && (
                 <Card className="mb-6">
                     <CardBody>
-                        <h3 className="text-lg font-bold mb-4">Create New Admin</h3>
+                        <h3 className="text-lg font-bold mb-4">
+                            {editingAdmin ? 'Edit Admin' : 'Create New Admin'}
+                        </h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid md:grid-cols-2 gap-4">
                                 <Input
@@ -185,6 +204,10 @@ export default function AdminsManagementPage() {
                                         value={formData.role}
                                         onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                                         className="input"
+                                        disabled={
+                                            editingAdmin?.role === 'super_admin' ||
+                                            editingAdmin?.id === currentAdmin?.id
+                                        }
                                     >
                                         <option value="admin">Admin</option>
                                         <option value="super_admin">Super Admin</option>
@@ -192,7 +215,7 @@ export default function AdminsManagementPage() {
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                <Button type="submit" variant="primary">Create Admin</Button>
+                                <Button type="submit" variant="primary">{editingAdmin ? 'Update Admin' : 'Create Admin'}</Button>
                                 <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
                                     Cancel
                                 </Button>
@@ -221,14 +244,14 @@ export default function AdminsManagementPage() {
                                         <p className="text-sm text-gray-600">{admin.email}</p>
                                         <div className="flex items-center gap-3 mt-2 text-sm">
                                             <span className={`px-2 py-1 rounded text-xs font-semibold ${admin.role === 'super_admin'
-                                                    ? 'bg-purple-100 text-purple-800'
-                                                    : 'bg-blue-100 text-blue-800'
+                                                ? 'bg-purple-100 text-purple-800'
+                                                : 'bg-blue-100 text-blue-800'
                                                 }`}>
                                                 {admin.role === 'super_admin' ? 'Super Admin' : 'Admin'}
                                             </span>
                                             <span className={`px-2 py-1 rounded text-xs font-semibold ${admin.active
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-gray-100 text-gray-800'
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-gray-100 text-gray-800'
                                                 }`}>
                                                 {admin.active ? 'Active' : 'Inactive'}
                                             </span>
@@ -238,25 +261,46 @@ export default function AdminsManagementPage() {
                                         </div>
                                     </div>
                                 </div>
-                                {currentAdmin?.id !== admin.id && (
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => toggleActive(admin.id, admin.active)}
-                                        >
-                                            {admin.active ? 'Deactivate' : 'Activate'}
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => openDeleteModal(admin.id, admin.name)}
-                                            className="text-red-600 hover:bg-red-50"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                )}
+                                <div className="flex gap-2">
+
+                                    {/* Edit button – allow self edit */}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setEditingAdmin(admin);
+                                            setFormData({
+                                                email: admin.email,
+                                                password: '',
+                                                name: admin.name,
+                                                role: admin.role,
+                                                active: admin.active,
+                                            });
+                                            setShowForm(true);
+                                        }}
+                                    >
+                                        <Edit className="h-4 w-4" />
+                                    </Button>
+                                    {currentAdmin?.id !== admin.id && (
+                                        <>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => toggleActive(admin.id, admin.active)}
+                                            >
+                                                {admin.active ? 'Deactivate' : 'Activate'}
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => openDeleteModal(admin.id, admin.name)}
+                                                className="text-red-600 hover:bg-red-50"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </CardBody>
                     </Card>
