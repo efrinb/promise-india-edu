@@ -57,6 +57,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
     hostel: initialData?.fees?.hostel || 0,
     other: initialData?.fees?.other || 0,
     total: initialData?.fees?.total || 0,
+    admissionStatus: initialData?.admissionStatus || 'open',
     featured: initialData?.featured || false,
     thumbnailUrl: initialData?.thumbnailUrl || '',
     galleryUrls: (initialData?.galleryUrls || []) as string[],
@@ -240,6 +241,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
           other: Number(formData.other) || 0,
           total: Number(formData.total),
         },
+        admissionStatus: formData.admissionStatus,
         featured: formData.featured,
         thumbnailUrl: formData.thumbnailUrl || null,
         galleryUrls: formData.galleryUrls,
@@ -347,7 +349,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Category <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -375,7 +377,26 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Admission Status <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={formData.admissionStatus}
+                    onChange={(e) => setFormData({ ...formData, admissionStatus: e.target.value })}
+                    className="input"
+                    required
+                  >
+                    <option value="open">Admissions Open</option>
+                    <option value="closing_soon">Closing Soon</option>
+                    <option value="closed">Admissions Closed</option>
+                  </select>
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    This badge will be displayed on the college card
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Status <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -402,7 +423,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   About (Full Description) <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -423,7 +444,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
             {(formData.category === 'Nursing' || formData.category === 'Physiotherapy') && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Courses Offered</h3>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   Select all {formData.category.toLowerCase()} courses offered by this college <span className="text-red-500">*</span>
                 </p>
 
@@ -442,7 +463,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                         p-4 border-2 rounded-lg cursor-pointer transition-all
                         ${formData.courses.includes(course)
                           ? 'border-primary bg-primary/5'
-                          : 'border-gray-200 hover:border-primary/50'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
                         }
                       `}
                     >
@@ -454,7 +475,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                           className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                           onClick={(e) => e.stopPropagation()}
                         />
-                        <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
                           {course}
                         </label>
                       </div>
@@ -464,21 +485,21 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
                 {/* Selected Courses Display */}
                 {formData.courses.length > 0 && (
-                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-sm text-blue-900 font-medium mb-2">
+                  <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <p className="text-sm text-blue-900 dark:text-blue-300 font-medium mb-2">
                       Selected Courses ({formData.courses.length}):
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {formData.courses.map((course) => (
                         <span
                           key={course}
-                          className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                          className="inline-flex items-center px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium"
                         >
                           {course}
                           <button
                             type="button"
                             onClick={() => toggleCourse(course)}
-                            className="ml-2 hover:text-blue-900"
+                            className="ml-2 hover:text-blue-900 dark:hover:text-blue-100"
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -496,7 +517,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
               {/* Thumbnail */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Thumbnail Image (Main Image)
                 </label>
 
@@ -517,7 +538,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                     </button>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center">
                     <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-2" />
                     <label className="cursor-pointer">
                       <span className="text-primary hover:text-primary-600">
@@ -538,7 +559,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
               {/* Gallery */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Gallery Images (Max 5)
                 </label>
 
@@ -563,7 +584,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                 </div>
 
                 {formData.galleryUrls.length < 5 && (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center">
                     <Upload className="mx-auto h-12 w-12 text-gray-400 mb-2" />
                     <label className="cursor-pointer">
                       <span className="text-primary hover:text-primary-600">
@@ -642,7 +663,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
               </div>
 
               <div className="border-t pt-4 mb-4">
-                <h4 className="text-md font-semibold mb-4 text-gray-700">Additional Fees (Optional)</h4>
+                <h4 className="text-md font-semibold mb-4 text-gray-700 dark:text-gray-300">Additional Fees (Optional)</h4>
                 <div className="grid md:grid-cols-2 gap-4">
                   <Input
                     label="Hostel Fee (Annual)"
@@ -664,12 +685,12 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
               <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-gray-900">Total Course Fee (4 Years)</span>
-                  <span className="text-2xl font-bold text-primary">
+                  <span className="text-lg font-bold text-gray-900 dark:text-gray-100">Total Course Fee (4 Years)</span>
+                  <span className="text-2xl font-bold text-primary dark:text-primary-400">
                     ₹{formData.total.toLocaleString('en-IN')}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                   Auto-calculated based on all fee components
                 </p>
               </div>
@@ -686,7 +707,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                   onChange={(e) => setFormData({ ...formData, googleFormUrl: e.target.value })}
                   placeholder="https://forms.gle/..."
                 />
-                <p className="text-xs text-gray-500 -mt-2">
+                <p className="text-xs text-gray-500 dark:text-gray-400 -mt-2">
                   Leave empty if you don't have an application form yet
                 </p>
 
@@ -698,7 +719,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                     className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                   />
-                  <label htmlFor="featured" className="text-sm font-medium text-gray-700">
+                  <label htmlFor="featured" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Mark as Featured College
                   </label>
                 </div>
@@ -707,7 +728,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
 
             {/* Submit Button */}
             <div className="flex gap-3 pt-4 border-t">
-              <Button type="submit" variant="primary" disabled={loading || uploading} className="flex-1">
+              <Button type="submit" variant="danger" disabled={loading || uploading} className="flex-1">
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

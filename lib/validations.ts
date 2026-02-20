@@ -5,23 +5,6 @@ export const loginSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-export const consultationSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  phone: z.string().min(10, 'Please enter a valid phone number'),
-  email: z.string().email('Invalid email address'),
-  fatherOccupation: z.string().optional(),
-  dateOfBirth: z.string().optional().transform(val => {
-    if (!val) return null;
-    return new Date(val);
-  }),
-  gender: z.string().optional(),
-  state: z.string().optional(),
-  city: z.string().optional(),
-  branch: z.string().optional(),
-  preferredCourse: z.string().optional(),
-  message: z.string().optional(),
-});
-
 export const collegeSchema = z.object({
   name: z.string().min(3, 'College name must be at least 3 characters'),
   category: z.enum(['Nursing', 'Physiotherapy', 'Abroad', 'Other']),
@@ -38,6 +21,7 @@ export const collegeSchema = z.object({
     other: z.number().min(0).optional(),
     total: z.number().min(0),
   }),
+  admissionStatus: z.enum(['open', 'closing_soon', 'closed']).default('open'),
   featured: z.boolean().default(false),
   thumbnailUrl: z.string().nullable().optional(),
   galleryUrls: z.array(z.string()).default([]),
@@ -48,18 +32,44 @@ export const collegeSchema = z.object({
   status: z.enum(['draft', 'published']).default('draft'),
 });
 
+export const consultationSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  phone: z.string().min(10, 'Please enter a valid phone number'),
+  email: z.string().email('Invalid email address'),
+  fatherOccupation: z.string().optional(),
+  dateOfBirth: z.string().optional().transform(val => {
+    if (!val) return null;
+    return new Date(val);
+  }),
+  gender: z.string().optional(),
+  state: z.string().optional(),
+  city: z.string().optional(),
+  branch: z.string().optional(),
+  preferredCourse: z.string().optional(),
+  message: z.string().optional(),
+  inquiryType: z.enum(['apply', 'consultation', 'visit', 'general']).default('general'),
+  source: z.enum(['homepage', 'college_detail', 'direct', 'mobile_cta']).default('direct'),
+});
+
 export const settingsSchema = z.object({
   adminEmail: z.string().email('Invalid email address'),
   phone: z.string().optional(),
   address: z.string().optional(),
-  whatsappUrl: z.string().optional().transform(val => val === '' ? null : val),
-  facebookUrl: z.string().optional().transform(val => val === '' ? null : val),
-  instagramUrl: z.string().optional().transform(val => val === '' ? null : val),
-  twitterUrl: z.string().optional().transform(val => val === '' ? null : val),
-  linkedinUrl: z.string().optional().transform(val => val === '' ? null : val),
+  whatsappUrl: z.string().optional().transform(val => {
+    if (val === '') return null;
+    return val;
+  }),
+  facebookUrl: z.string().optional(),
+  instagramUrl: z.string().optional(),
+  twitterUrl: z.string().optional(),
+  linkedinUrl: z.string().optional(),
+  announcementEnabled: z.boolean().default(false),
+  announcementText: z.string().optional(),
 });
 
-export type LoginInput = z.infer<typeof loginSchema>;
-export type ConsultationInput = z.infer<typeof consultationSchema>;
-export type CollegeInput = z.infer<typeof collegeSchema>;
-export type SettingsInput = z.infer<typeof settingsSchema>;
+export const adminSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  role: z.enum(['admin', 'super_admin']).default('admin'),
+});

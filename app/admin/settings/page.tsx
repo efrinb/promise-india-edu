@@ -4,13 +4,19 @@ import { useEffect, useState } from 'react';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Save, Settings as SettingsIcon } from 'lucide-react';
+import { Save, Megaphone, Share2, Contact, ChevronDown } from 'lucide-react';
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  // Collapse states
+  const [contactOpen, setContactOpen] = useState(false);
+  const [announcementOpen, setAnnouncementOpen] = useState(false);
+  const [socialOpen, setSocialOpen] = useState(false);
+
 
   const [formData, setFormData] = useState({
     adminEmail: '',
@@ -21,6 +27,8 @@ export default function SettingsPage() {
     instagramUrl: '',
     twitterUrl: '',
     linkedinUrl: '',
+    announcementEnabled: false,
+    announcementText: '',
   });
 
   useEffect(() => {
@@ -42,6 +50,8 @@ export default function SettingsPage() {
           instagramUrl: data.settings.instagramUrl || '',
           twitterUrl: data.settings.twitterUrl || '',
           linkedinUrl: data.settings.linkedinUrl || '',
+          announcementEnabled: data.settings.announcementEnabled || false,
+          announcementText: data.settings.announcementText || '',
         });
       }
     } catch (error) {
@@ -115,99 +125,188 @@ export default function SettingsPage() {
           {/* Contact Information */}
           <Card>
             <CardBody>
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="bg-primary/10 p-3 rounded-lg">
-                  <SettingsIcon className="h-6 w-6 text-primary" />
+              <div className='flex items-center justify-between cursor-pointer' onClick={() => setContactOpen(!contactOpen)}>
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    <Contact className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">Contact Information</h2>
+                    <p className="text-sm text-gray-600">Update your contact details</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold">Contact Information</h2>
-                  <p className="text-sm text-gray-600">Update your contact details</p>
+                <ChevronDown
+                  className={`h-5 w-5 transition-transform ${contactOpen ? 'rotate-180' : ''
+                    }`}
+                />
+              </div>
+              {contactOpen && (
+                <>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <Input
+                      label="Admin Email (for notifications)"
+                      type="email"
+                      value={formData.adminEmail}
+                      onChange={(e) => setFormData({ ...formData, adminEmail: e.target.value })}
+                      required
+                      placeholder="info@promiseindia.com"
+                    />
+
+                    <Input
+                      label="Contact Phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+91 9876543210"
+                    />
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Office Address
+                    </label>
+                    <textarea
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      rows={3}
+                      className="textarea"
+                      placeholder="Enter your office address"
+                    />
+                  </div>
+                </>
+              )}
+            </CardBody>
+          </Card>
+
+          {/* Announcement Section (Collapsible) */}
+          <Card>
+            <CardBody>
+              <div className='flex items-center justify-between cursor-pointer' onClick={() => setAnnouncementOpen(!announcementOpen)}>
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    <Megaphone className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">Announcement Bar</h2>
+                    <p className="text-sm text-gray-600">Display an announcement bar on your website</p>
+                  </div>
                 </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <Input
-                  label="Admin Email (for notifications)"
-                  type="email"
-                  value={formData.adminEmail}
-                  onChange={(e) => setFormData({ ...formData, adminEmail: e.target.value })}
-                  required
-                  placeholder="info@promiseindia.com"
-                />
-
-                <Input
-                  label="Contact Phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+91 9876543210"
+                <ChevronDown
+                  className={`h-5 w-5 transition-transform ${announcementOpen ? 'rotate-180' : ''
+                    }`}
                 />
               </div>
 
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Office Address
-                </label>
-                <textarea
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  rows={3}
-                  className="textarea"
-                  placeholder="Enter your office address"
-                />
-              </div>
+              {announcementOpen && (
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.announcementEnabled}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          announcementEnabled: e.target.checked,
+                        })
+                      }
+                      className="h-4 w-4 text-primary border-gray-300 rounded"
+                    />
+                    <label className="text-sm font-medium text-gray-700">
+                      Enable Announcement Bar
+                    </label>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Announcement Text
+                    </label>
+                    <textarea
+                      value={formData.announcementText}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          announcementText: e.target.value,
+                        })
+                      }
+                      rows={3}
+                      className="textarea"
+                      placeholder="Enter announcement message to display on website..."
+                    />
+                  </div>
+                </div>
+              )}
             </CardBody>
           </Card>
 
           {/* Social Media Links */}
           <Card>
             <CardBody>
-              <h2 className="text-xl font-bold mb-6">Social Media & Messaging Links</h2>
-
-              <div className="space-y-4">
-                <Input
-                  label="WhatsApp URL"
-                  type="url"
-                  value={formData.whatsappUrl}
-                  onChange={(e) => setFormData({ ...formData, whatsappUrl: e.target.value })}
-                  placeholder="https://wa.me/919876543210"
-                />
-                <p className="text-xs text-gray-500 -mt-2">
-                  Format: https://wa.me/[country_code][phone_number] (e.g., https://wa.me/919876543210)
-                </p>
-
-                <Input
-                  label="Facebook URL"
-                  type="url"
-                  value={formData.facebookUrl}
-                  onChange={(e) => setFormData({ ...formData, facebookUrl: e.target.value })}
-                  placeholder="https://facebook.com/promiseindia"
-                />
-
-                <Input
-                  label="Instagram URL"
-                  type="url"
-                  value={formData.instagramUrl}
-                  onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
-                  placeholder="https://instagram.com/promiseindia"
-                />
-
-                <Input
-                  label="Twitter URL"
-                  type="url"
-                  value={formData.twitterUrl}
-                  onChange={(e) => setFormData({ ...formData, twitterUrl: e.target.value })}
-                  placeholder="https://twitter.com/promiseindia"
-                />
-
-                <Input
-                  label="LinkedIn URL"
-                  type="url"
-                  value={formData.linkedinUrl}
-                  onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
-                  placeholder="https://linkedin.com/company/promiseindia"
+              <div
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => setSocialOpen(prev => !prev)}
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    <Share2 className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">Social Media & Messaging Links</h2>
+                    <p className="text-sm text-gray-600">Add links to your social media profiles and WhatsApp</p>
+                  </div>
+                </div>
+                <ChevronDown
+                  className={`h-5 w-5 transition-transform ${socialOpen ? 'rotate-180' : ''
+                    }`}
                 />
               </div>
+              {socialOpen && (
+                <>
+                  <div className="space-y-4">
+                    <Input
+                      label="WhatsApp URL"
+                      type="url"
+                      value={formData.whatsappUrl}
+                      onChange={(e) => setFormData({ ...formData, whatsappUrl: e.target.value })}
+                      placeholder="https://wa.me/919876543210"
+                    />
+                    <p className="text-xs text-gray-500 -mt-2">
+                      Format: https://wa.me/[country_code][phone_number] (e.g., https://wa.me/919876543210)
+                    </p>
+
+                    <Input
+                      label="Facebook URL"
+                      type="url"
+                      value={formData.facebookUrl}
+                      onChange={(e) => setFormData({ ...formData, facebookUrl: e.target.value })}
+                      placeholder="https://facebook.com/promiseindia"
+                    />
+
+                    <Input
+                      label="Instagram URL"
+                      type="url"
+                      value={formData.instagramUrl}
+                      onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
+                      placeholder="https://instagram.com/promiseindia"
+                    />
+
+                    <Input
+                      label="Twitter URL"
+                      type="url"
+                      value={formData.twitterUrl}
+                      onChange={(e) => setFormData({ ...formData, twitterUrl: e.target.value })}
+                      placeholder="https://twitter.com/promiseindia"
+                    />
+
+                    <Input
+                      label="LinkedIn URL"
+                      type="url"
+                      value={formData.linkedinUrl}
+                      onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
+                      placeholder="https://linkedin.com/company/promiseindia"
+                    />
+                  </div>
+                </>
+              )}
             </CardBody>
           </Card>
 

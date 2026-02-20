@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, MapPin, GraduationCap, ArrowRight } from 'lucide-react';
+import { Search, MapPin, GraduationCap, ArrowRight, Filter, X } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { AdmissionBadge } from '@/components/public/AdmissionBadge';
+import { CollegeGridSkeleton } from '@/components/ui/CollegeSkeleton';
 import { formatCurrency } from '@/lib/utils';
 import type { College } from '@/types';
 
@@ -16,6 +18,7 @@ export default function CollegesPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
+  const [admissionStatus, setAdmissionStatus] = useState('');
 
   useEffect(() => {
     fetchColleges();
@@ -39,22 +42,36 @@ export default function CollegesPage() {
     }
   };
 
+  // Client-side filter for admission status
+  const filtered = admissionStatus
+    ? colleges.filter(c => c.admissionStatus === admissionStatus)
+    : colleges;
+
+  const clearFilters = () => {
+    setSearch('');
+    setCategory('');
+    setLocation('');
+    setAdmissionStatus('');
+  };
+
+  const hasFilters = search || category || location || admissionStatus;
+
   return (
     <div className="section">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Explore Nursing Colleges</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-text-light dark:text-gray-400 max-w-3xl mx-auto">
             Find the perfect nursing institution that matches your career aspirations and educational goals.
           </p>
         </div>
 
         {/* Filters */}
         <Card className="p-6 mb-12">
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-4 gap-4 mb-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-text-lighter dark:text-gray-500" />
               <Input
                 type="text"
                 placeholder="Search colleges..."
@@ -71,6 +88,7 @@ export default function CollegesPage() {
             >
               <option value="">All Categories</option>
               <option value="Nursing">Nursing</option>
+              <option value="Physiotherapy">Physiotherapy</option>
               <option value="Abroad">Abroad Education</option>
               <option value="Other">Other</option>
             </select>
@@ -81,29 +99,57 @@ export default function CollegesPage() {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
+
+            <select
+              value={admissionStatus}
+              onChange={(e) => setAdmissionStatus(e.target.value)}
+              className="input"
+            >
+              <option value="">All Admission Status</option>
+              <option value="open">Admissions Open</option>
+              <option value="closing_soon">Closing Soon</option>
+              <option value="closed">Closed</option>
+            </select>
           </div>
+
+          {hasFilters && (
+            <div className="flex items-center justify-between pt-4 border-t dark:border-gray-700">
+              <p className="text-sm text-text-light dark:text-gray-400">
+                Showing {filtered.length} college{filtered.length !== 1 ? 's' : ''}
+              </p>
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                <X className="h-4 w-4 mr-2" />
+                Clear Filters
+              </Button>
+            </div>
+          )}
         </Card>
 
         {/* Results */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading colleges...</p>
-          </div>
-        ) : colleges.length === 0 ? (
-          <div className="text-center py-12">
-            <GraduationCap className="h-24 w-24 text-gray-300 mx-auto mb-4" />
-            <p className="text-xl text-gray-600">No colleges found matching your criteria.</p>
-          </div>
+          <CollegeGridSkeleton />
+        ) : filtered.length === 0 ? (
+          <Card className="p-12">
+            <div className="text-center">
+              <GraduationCap className="h-24 w-24 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-bold mb-2">No colleges found</h3>
+              <p className="text-text-light dark:text-gray-400 mb-6">
+                {hasFilters
+                  ? "Try adjusting your filters to see more results"
+                  : "No colleges are currently available"}
+              </p>
+              {hasFilters && (
+                <Button variant="primary" onClick={clearFilters}>
+                  Clear All Filters
+                </Button>
+              )}
+            </div>
+          </Card>
         ) : (
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {colleges.map((college) => (
-                <Card
-                  key={college.id}
-                  className="overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col"
-                >
-                  {/* College Image */}
+              {filtered.map((college) => (
+                <Card key={college.id} className="overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
                   <div className="relative aspect-video overflow-hidden">
                     {college.thumbnailUrl ? (
                       <Image
@@ -118,13 +164,14 @@ export default function CollegesPage() {
                       </div>
                     )}
 
-                    {college.featured && (
-                      <div className="absolute top-3 right-3">
+                    <div className="absolute top-3 left-3 flex flex-col gap-2">
+                      {college.featured && (
                         <span className="bg-accent text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                           Featured
                         </span>
-                      </div>
-                    )}
+                      )}
+                      <AdmissionBadge status={college.admissionStatus as any} />
+                    </div>
 
                     <div className="absolute bottom-3 left-3">
                       <span className="bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-xs font-semibold">
@@ -133,7 +180,6 @@ export default function CollegesPage() {
                     </div>
                   </div>
 
-                  {/* Content Wrapper */}
                   <div className="p-6 flex flex-col flex-1">
                     <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
                       <MapPin className="h-4 w-4" />
@@ -155,7 +201,7 @@ export default function CollegesPage() {
                           {college.courses.slice(0, 2).map((course, idx) => (
                             <span
                               key={idx}
-                              className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium"
+                              className="bg-secondary-50 text-secondary-700 dark:bg-secondary-900 dark:text-secondary-300 px-2 py-1 rounded text-xs font-medium"
                             >
                               {course.split('(')[0].trim()}
                             </span>
@@ -168,8 +214,6 @@ export default function CollegesPage() {
                         </div>
                       </div>
                     )}
-
-                    {/* Push bottom section down */}
                     <div className="mt-auto">
                       <div className="flex items-center justify-between mb-4 pb-4 border-b">
                         <span className="text-sm text-gray-600">Total Course Fee:</span>
@@ -191,20 +235,13 @@ export default function CollegesPage() {
             </div>
 
             <div className="mt-12 text-center">
-              <p className="text-gray-600">
-                Showing {colleges.length} college{colleges.length !== 1 ? 's' : ''}
+              <p className="text-text-light dark:text-gray-400 mb-4">
+                Showing {filtered.length} of {colleges.length} college{colleges.length !== 1 ? 's' : ''}
               </p>
-              {(search || category || location) && (
-                <button
-                  onClick={() => {
-                    setSearch('');
-                    setCategory('');
-                    setLocation('');
-                  }}
-                  className="mt-4 text-primary hover:underline text-sm font-medium"
-                >
-                  Clear all filters
-                </button>
+              {hasFilters && filtered.length < colleges.length && (
+                <Button variant="outline" onClick={clearFilters}>
+                  View All Colleges
+                </Button>
               )}
             </div>
           </>

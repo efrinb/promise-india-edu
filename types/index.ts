@@ -17,6 +17,7 @@ export interface College {
   thumbnailUrl: string | null;
   galleryUrls: string[];
   googleFormUrl: string | null;
+  admissionStatus: string;  // Add this line
   status: string;
   createdAt: Date;
   updatedAt: Date;
@@ -36,6 +37,8 @@ export interface Consultation {
   preferredCourse: string | null;
   message: string | null;
   status: string;
+  inquiryType: string;
+  source: string | null;
   notified: boolean;
   createdAt: Date;
   updatedAt: Date;

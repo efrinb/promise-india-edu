@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = [
+  const navItems = [
     { href: '/', label: 'Home' },
     { href: '/colleges', label: 'Colleges' },
     { href: '/abroad-education', label: 'Abroad Education' },
@@ -17,70 +17,64 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md">
-      <div className="container-custom">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
+    <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm transition-colors">
+      <nav className="container-custom">
+        <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <GraduationCap className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-primary">
-              Promise India Education
+            <GraduationCap className="h-8 w-8 text-primary dark:text-primary-400" />
+            <span className="text-xl font-bold text-primary dark:text-primary-400">
+              Promise India Education Consultancy
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
+          <div className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
               <Link
-                key={link.href}
-                href={link.href}
-                className="text-gray-700 hover:text-primary font-medium transition-colors"
+                key={item.href}
+                href={item.href}
+                className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors"
               >
-                {link.label}
+                {item.label}
               </Link>
             ))}
-            <Link href="/contact">
-              <Button variant="primary" size="sm">
-                Apply Now
-              </Button>
-            </Link>
-          </nav>
+          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6 text-primary" />
-            ) : (
-              <Menu className="h-6 w-6 text-primary" />
-            )}
-          </button>
+          <div className="flex md:hidden items-center space-x-2">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-gray-700 dark:text-gray-300"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-200">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block py-3 text-gray-700 hover:text-primary font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 border-t dark:border-gray-700">
+            <div className="flex flex-col space-y-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors px-2 py-1"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link href="/contact?type=consultation&source=header" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="danger" className="w-full">
+                  Get Started
+                </Button>
               </Link>
-            ))}
-            <Link href="/contact" onClick={() => setIsMenuOpen(false)}>
-              <Button variant="primary" size="sm" className="w-full mt-2">
-                Apply Now
-              </Button>
-            </Link>
-          </nav>
+            </div>
+          </div>
         )}
-      </div>
+      </nav>
     </header>
   );
 }
