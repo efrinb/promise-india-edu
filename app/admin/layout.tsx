@@ -92,24 +92,26 @@ function AdminLayoutContent({
         fixed inset-y-0 left-0 z-50 w-64 bg-primary dark:bg-gray-800 text-white transform transition-transform duration-300
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <div className="p-6 border-b border-white/10 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-white">Admin Panel</h2>
-          <div className="mt-3 flex items-center space-x-2">
-            <div className={`p-2 rounded-lg ${admin?.role === 'super_admin' ? 'bg-accent/20' : 'bg-secondary/20'}`}>
-              {admin?.role === 'super_admin' ? (
-                <Shield className="h-4 w-4 text-accent-300" />
-              ) : (
-                <User className="h-4 w-4 text-secondary-300" />
-              )}
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-white">{admin?.name}</p>
-              <p className="text-xs text-gray-300">
-                {admin?.role === 'super_admin' ? 'Super Admin' : 'Admin'}
-              </p>
+        <Link href={admin?.role === 'super_admin' ? '/admin/settings/admins' : '/admin/profile'}>
+          <div className="p-6 border-b border-white/10 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-white">Admin Panel</h2>
+            <div className="mt-3 flex items-center space-x-2">
+              <div className={`p-2 rounded-lg ${admin?.role === 'super_admin' ? 'bg-accent/20' : 'bg-secondary/20'}`}>
+                {admin?.role === 'super_admin' ? (
+                  <Shield className="h-4 w-4 text-accent-300" />
+                ) : (
+                  <User className="h-4 w-4 text-secondary-300" />
+                )}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-white">{admin?.name}</p>
+                <p className="text-xs text-gray-300">
+                  {admin?.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </Link>
 
         <nav className="p-4 space-y-2">
           {navItems.map((item) => {

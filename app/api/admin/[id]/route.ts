@@ -7,7 +7,7 @@ const updateAdminSchema = z.object({
   email: z.string().email().optional(),
   password: z.string().min(6).optional(),
   name: z.string().min(2).optional(),
-  role: z.enum(['admin', 'SUPER_ADMIN']).optional(),
+  role: z.enum(['admin', 'super_admin']).optional(),
   active: z.boolean().optional(),
 });
 
@@ -19,7 +19,7 @@ export async function GET(
   try {
     const currentAdmin = await requireAuth();
     
-    if (currentAdmin.role !== 'SUPER_ADMIN') {
+    if (currentAdmin.role !== 'super_admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -114,6 +114,26 @@ export async function DELETE(
     if (currentAdmin.id === params.id) {
       return NextResponse.json(
         { error: 'Cannot delete your own account' },
+        { status: 400 }
+      );
+    }
+
+    const adminCount = await prisma.admin.count({
+      where: { role: 'super_admin', active: true },
+    });
+
+    const adminToDelete = await prisma.admin.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!adminToDelete) {
+      return NextResponse.json({ error: 'Admin not found' }, { status: 404 });
+    }
+
+    // Prevent deleting the last active super admin
+    if (adminToDelete?.role === 'super_admin' && adminCount <= 1) {
+      return NextResponse.json(
+        { error: 'Cannot delete the last active super admin' },
         { status: 400 }
       );
     }

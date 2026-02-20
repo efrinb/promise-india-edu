@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { prisma } from './db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const TOKEN_NAME = 'admin_token';
@@ -62,7 +63,31 @@ export async function getAuthToken(): Promise<string | null> {
 export async function getCurrentAdmin(): Promise<AdminTokenPayload | null> {
   const token = await getAuthToken();
   if (!token) return null;
-  return verifyToken(token);
+
+  const decoded = verifyToken(token);
+  if (!decoded) return null;
+  const admin = await prisma.admin.findUnique({
+    where: { id: decoded.id },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      active: true,
+    },
+  });
+
+  if(!admin || !admin.active)
+    {
+      return null;
+    } 
+
+  return {
+    id: admin.id,
+    email: admin.email,
+    name: admin.name,
+    role: admin.role,
+  };
 }
 
 export async function requireAuth(): Promise<AdminTokenPayload> {
