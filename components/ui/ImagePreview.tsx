@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -50,12 +50,12 @@ export default function ImagePreview({
         }
     };
 
-    useState(() => {
+    useEffect(() => {
         if (open) {
             window.addEventListener('keydown', handleKeyDown);
             return () => window.removeEventListener('keydown', handleKeyDown);
         }
-    });
+    }, [open, activeIndex]);
 
     const displaySrc = images && images[activeIndex] ? images[activeIndex] : src;
 

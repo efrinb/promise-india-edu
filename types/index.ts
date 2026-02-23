@@ -68,3 +68,19 @@ export interface Settings {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Banner {
+  id: string;
+  uniqueId: string;
+  name: string;
+  link: string | null;
+  imageUrl: string;
+  width: string;
+  message: string | null;
+  startDate: Date;
+  endDate: Date;
+  active: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
