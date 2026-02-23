@@ -89,3 +89,24 @@ model Settings {
   announcementEnabled Boolean  @default(false)
   announcementText    String?
 }
+
+model Banner {
+  id          String   @id @default(cuid())
+  uniqueId    String   @unique
+  name        String
+  link        String?
+  imageUrl    String
+  width       String   @default("full") // "full", "large", "medium", "small"
+  message     String?  @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active])
+  @@index([startDate])
+  @@index([endDate])
+  @@index([order])
+}

@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Save, Megaphone, Share2, Contact, ChevronDown } from 'lucide-react';
+import { Save, Megaphone, Share2, Contact, ChevronDown, ChevronRight, Image } from 'lucide-react';
+import Link from 'next/link';
+
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -16,6 +18,7 @@ export default function SettingsPage() {
   const [contactOpen, setContactOpen] = useState(false);
   const [announcementOpen, setAnnouncementOpen] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
+  const [bannersOpen, setBannersOpen] = useState(false);
 
 
   const [formData, setFormData] = useState({
@@ -235,6 +238,31 @@ export default function SettingsPage() {
                   </div>
                 </div>
               )}
+            </CardBody>
+          </Card>
+
+          {/* Banner Management Link - NEW */}
+          <Card>
+            <CardBody>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-accent/10 p-3 rounded-lg">
+                    <Image className="h-6 w-6 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">Homepage Banners</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Manage carousel banners displayed on the homepage
+                    </p>
+                  </div>
+                </div>
+                <Link href="/admin/settings/banners">
+                  <Button variant="primary">
+                    Manage Banners
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </CardBody>
           </Card>
 

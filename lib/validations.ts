@@ -73,3 +73,16 @@ export const adminSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   role: z.enum(['admin', 'super_admin']).default('admin'),
 });
+
+export const bannerSchema = z.object({
+  uniqueId: z.string().min(3, 'Unique ID must be at least 3 characters').regex(/^[a-zA-Z0-9-_]+$/, 'Only alphanumeric characters, hyphens, and underscores allowed'),
+  name: z.string().min(3, 'Name must be at least 3 characters'),
+  link: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  imageUrl: z.string().min(1, 'Image is required'),
+  width: z.enum(['full', 'large', 'medium', 'small']).default('full'),
+  message: z.string().optional(),
+  startDate: z.string().transform(val => new Date(val)),
+  endDate: z.string().transform(val => new Date(val)),
+  active: z.boolean().default(true),
+  order: z.number().int().min(0).default(0),
+});

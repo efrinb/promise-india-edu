@@ -375,3 +375,68 @@ hr {
   white-space: nowrap;
   animation: marqueeScroll 15s linear infinite;
 }
+
+/* React Quill WYSIWYG Editor Styles */
+.ql-container {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.ql-editor {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.ql-editor.ql-blank::before {
+  @apply italic text-gray-400;
+}
+
+/* Dark mode support for Quill */
+.dark .ql-toolbar {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .ql-container {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .ql-editor {
+  @apply text-gray-100;
+}
+
+.dark .ql-stroke {
+  @apply stroke-gray-400;
+}
+
+.dark .ql-fill {
+  @apply fill-gray-400;
+}
+
+.dark .ql-picker-label {
+  @apply text-gray-400;
+}
+
+.dark .ql-picker-options {
+  @apply bg-gray-800 border-gray-700;
+}
+
+/* Banner message prose styles */
+/* .banner-message {
+  @apply prose prose-invert max-w-none;
+} */
+
+.banner-message h1,
+.banner-message h2,
+.banner-message h3 {
+  @apply font-bold mb-2;
+}
+
+.banner-message p {
+  @apply mb-2;
+}
+
+.banner-message ul,
+.banner-message ol {
+  @apply ml-4;
+}

@@ -285,7 +285,7 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/colleges">
-              <Button variant="accent" size="lg">
+              <Button variant="secondary" size="lg">
                 Explore Colleges
               </Button>
             </Link>

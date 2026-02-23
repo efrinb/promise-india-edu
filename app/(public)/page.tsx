@@ -18,6 +18,7 @@ import { Statistics } from '@/components/public/Statistics';
 import { Testimonials } from '@/components/public/Testimonials';
 import { prisma } from '@/lib/db';
 import { formatCurrency } from '@/lib/utils';
+import { BannerCarousel } from '@/components/public/BannerCarousel';
 
 export const metadata = {
   title: 'Promise India Education Consultancy - Nursing College Admissions',
@@ -73,6 +74,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Banner Carousel */}
+      <BannerCarousel />
 
       {/* Mission & Vision */}
       <section className="section bg-background dark:bg-gray-900">
