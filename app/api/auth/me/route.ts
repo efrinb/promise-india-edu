@@ -1,22 +1,46 @@
-import { NextResponse } from 'next/server';
-import { getCurrentAdmin } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
+import { prisma } from '@/lib/db';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const admin = await getCurrentAdmin();
-    
+    const currentAdmin = await requireAuth();
+
+    const admin = await prisma.admin.findUnique({
+      where: { id: currentAdmin.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        active: true,
+        profileImage: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
     if (!admin) {
+      return NextResponse.json(
+        { error: 'Admin not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ admin });
+  } catch (error: any) {
+    console.error('Auth me error:', error);
+    
+    if (error.message === 'Unauthorized') {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    return NextResponse.json({ admin });
-  } catch (error) {
     return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
+      { error: 'Failed to fetch admin details' },
+      { status: 500 }
     );
   }
 }

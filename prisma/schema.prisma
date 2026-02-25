@@ -14,12 +14,32 @@ model Admin {
   name      String
   role      String   @default("admin")
   active    Boolean  @default(true)
+  profileImage String?  // NEW - Profile picture URL
+  activities   AdminActivity[]  // NEW - Relationship
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   createdBy String?
 
   @@index([role])
   @@index([active])
+}
+
+model AdminActivity {
+  id          String   @id @default(cuid())
+  adminId     String
+  admin       Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  action      String   // "login", "logout", "create", "update", "delete"
+  entity      String?  // "college", "banner", "consultation", "admin", "settings"
+  entityId    String?  // ID of the affected entity
+  details     String?  @db.Text // Additional details in JSON format
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([adminId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
 }
 
 model College {
@@ -32,14 +52,15 @@ model College {
   about            String
   courses          String[] @default([])
   fees             Json
+  admissionStatus  String   @default("open")
   featured         Boolean  @default(false)
   thumbnailUrl     String?
   galleryUrls      String[] @default([])
+  videoUrls        String[] @default([])  // NEW - Video URLs
   googleFormUrl    String?
   status           String   @default("draft")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  admissionStatus  String   @default("open")
 
   @@index([category])
   @@index([status])

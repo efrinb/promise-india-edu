@@ -25,6 +25,7 @@ export const collegeSchema = z.object({
   featured: z.boolean().default(false),
   thumbnailUrl: z.string().nullable().optional(),
   galleryUrls: z.array(z.string()).default([]),
+  videoUrls: z.array(z.string()).default([]),  // NEW
   googleFormUrl: z.string().nullable().optional().transform(val => {
     if (val === '' || val === undefined) return null;
     return val;
@@ -79,7 +80,7 @@ export const bannerSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   link: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   imageUrl: z.string().min(1, 'Image is required'),
-  width: z.enum(['full', 'large', 'medium', 'small']).default('full'),
+  width: z.enum(['full', 'container', 'large', 'medium']).default('full'),
   message: z.string().optional(),
   startDate: z.string().transform(val => new Date(val)),
   endDate: z.string().transform(val => new Date(val)),

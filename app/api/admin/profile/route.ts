@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAuth, hashPassword } from '@/lib/auth';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 import { z } from 'zod';
 
 const profileSchema = z.object({
   email: z.string().email().optional(),
   name: z.string().min(2).optional(),
   password: z.string().min(6).optional(),
+  profileImage: z.string().optional(),
 });
 
 export async function GET() {
@@ -20,6 +22,7 @@ export async function GET() {
         email: true,
         name: true,
         role: true,
+        profileImage: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -30,7 +33,7 @@ export async function GET() {
     if (error.message === 'Unauthorized') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch profile: ' + error.message }, { status: 500 });
   }
 }
 
@@ -45,6 +48,7 @@ export async function PUT(request: NextRequest) {
 
     if (validatedData.email) updateData.email = validatedData.email;
     if (validatedData.name) updateData.name = validatedData.name;
+    if (validatedData.profileImage !== undefined) updateData.profileImage = validatedData.profileImage;
 
     if (validatedData.password) {
       updateData.password = await hashPassword(validatedData.password);
@@ -58,9 +62,25 @@ export async function PUT(request: NextRequest) {
         email: true,
         name: true,
         role: true,
+        profileImage: true,
         updatedAt: true,
       },
     });
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'update',
+        'profile',
+        currentAdmin.id,
+        { updatedFields: Object.keys(updateData) }
+      );
+    }
+    catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ admin: updated });
   } catch (error: any) {

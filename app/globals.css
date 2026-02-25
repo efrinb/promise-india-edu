@@ -421,22 +421,57 @@ hr {
   @apply bg-gray-800 border-gray-700;
 }
 
-/* Banner message prose styles */
-/* .banner-message {
-  @apply prose prose-invert max-w-none;
-} */
-
-.banner-message h1,
-.banner-message h2,
-.banner-message h3 {
-  @apply font-bold mb-2;
+/* Banner message content styles - Fixed */
+.banner-message-content {
+  @apply text-white max-w-none;
 }
 
-.banner-message p {
-  @apply mb-2;
+.banner-message-content h1,
+.banner-message-content h2,
+.banner-message-content h3,
+.banner-message-content h4,
+.banner-message-content h5,
+.banner-message-content h6 {
+  @apply font-bold mb-4 text-white;
 }
 
-.banner-message ul,
-.banner-message ol {
-  @apply ml-4;
+.banner-message-content h1 {
+  @apply text-4xl md:text-5xl lg:text-6xl;
+}
+
+.banner-message-content h2 {
+  @apply text-3xl md:text-4xl;
+}
+
+.banner-message-content h3 {
+  @apply text-2xl md:text-3xl;
+}
+
+.banner-message-content p {
+  @apply mb-4 text-gray-100 text-lg md:text-xl;
+}
+
+.banner-message-content ul,
+.banner-message-content ol {
+  @apply ml-6 mb-4 text-gray-100;
+}
+
+.banner-message-content ul {
+  @apply list-disc;
+}
+
+.banner-message-content ol {
+  @apply list-decimal;
+}
+
+.banner-message-content li {
+  @apply mb-2 text-lg;
+}
+
+.banner-message-content strong {
+  @apply font-bold text-white;
+}
+
+.banner-message-content a {
+  @apply text-secondary-300 hover:text-secondary-400 underline;
 }

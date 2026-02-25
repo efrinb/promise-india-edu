@@ -9,6 +9,7 @@ import { AdmissionBadge } from '@/components/public/AdmissionBadge';
 import { prisma } from '@/lib/db';
 import { formatCurrency } from '@/lib/utils';
 import ImagePreview from '@/components/ui/ImagePreview';
+import { VideoPlayer } from '@/components/ui/VideoPlayer';
 
 interface Props {
   params: { slug: string };
@@ -192,22 +193,45 @@ export default async function CollegeDetailPage({ params }: Props) {
                   </Card>
                 )}
 
-                {/* Gallery */}
-                {galleryUrls && galleryUrls.length > 0 && (
+                {/* Gallery & Videos */}
+                {((galleryUrls && galleryUrls.length > 0) || (college.videoUrls && college.videoUrls.length > 0)) && (
                   <Card className="p-8">
-                    <h2 className="text-2xl font-bold mb-6">Campus Gallery</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {galleryUrls.map((url: string, index: number) => (
-                        <ImagePreview
-                          key={index}
-                          src={url}
-                          alt={`${college.name} - Campus Image ${index + 1}`}
-                          className="relative aspect-video rounded-lg overflow-hidden group"
-                          images={galleryUrls}
-                          currentIndex={index}
-                        />
-                      ))}
-                    </div>
+                    <h2 className="text-2xl font-bold mb-6">Campus Gallery & Videos</h2>
+
+                    {/* Images Section */}
+                    {galleryUrls && galleryUrls.length > 0 && (
+                      <div className='mb-8'>
+                        <h3 className="text-lg font-semibold mb-4 text-primary dark:text-primary-400">Campus Photos</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          {galleryUrls.map((url: string, index: number) => (
+                            <ImagePreview
+                              key={index}
+                              src={url}
+                              alt={`${college.name} - Campus Image ${index + 1}`}
+                              className="relative aspect-video rounded-lg overflow-hidden group"
+                              images={galleryUrls}
+                              currentIndex={index}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Videos Section */}
+                    {college.videoUrls && college.videoUrls.length > 0 && (
+                      <div className="mb-8">
+                        <h3 className="text-lg font-semibold mb-4 text-primary dark:text-primary-400">Campus Videos</h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          {college.videoUrls.map((url: string, index: number) => (
+                            <VideoPlayer
+                              key={index}
+                              url={url}
+                              title={`${college.name} - Video ${index + 1}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </Card>
                 )}
               </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   LayoutDashboard,
   GraduationCap,
@@ -92,23 +93,39 @@ function AdminLayoutContent({
         fixed inset-y-0 left-0 z-50 w-64 bg-primary dark:bg-gray-800 text-white transform transition-transform duration-300
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <Link href={admin?.role === 'super_admin' ? '/admin/settings/admins' : '/admin/profile'}>
-          <div className="p-6 border-b border-white/10 dark:border-gray-700">
-            <h2 className="text-xl font-bold text-white">Admin Panel</h2>
-            <div className="mt-3 flex items-center space-x-2">
-              <div className={`p-2 rounded-lg ${admin?.role === 'super_admin' ? 'bg-accent/20' : 'bg-secondary/20'}`}>
-                {admin?.role === 'super_admin' ? (
-                  <Shield className="h-4 w-4 text-accent-300" />
+        <div className="p-6 border-b border-white/10 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-white">Admin Panel</h2>
+        </div>
+
+        {/* Profile Section */}
+        <Link href="/admin/profile">
+          <div className="flex items-center space-x-3 p-4 mx-4 my-4 rounded-lg hover:bg-white/10 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+            {admin?.profileImage ? (
+              <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white/20">
+                <Image
+                  src={admin.profileImage}
+                  alt={admin.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 ring-2 ring-white/20">
+                {admin.role === 'super_admin' ? (
+                  <Shield className="h-6 w-6 text-white" />
                 ) : (
-                  <User className="h-4 w-4 text-secondary-300" />
+                  <User className="h-6 w-6 text-white" />
                 )}
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-white">{admin?.name}</p>
-                <p className="text-xs text-gray-300">
-                  {admin?.role === 'super_admin' ? 'Super Admin' : 'Admin'}
-                </p>
-              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{admin?.name}</p>
+              <p className="text-xs text-white/60 truncate">{admin?.email}</p>
+              {admin?.role === 'super_admin' && (
+                <span className="inline-block mt-1 px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded text-xs font-medium">
+                  Super Admin
+                </span>
+              )}
             </div>
           </div>
         </Link>
@@ -159,11 +176,11 @@ function AdminLayoutContent({
           <div className="flex items-center justify-between px-6 py-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2"
+              className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
               {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-            <h1 className="text-xl font-bold">Promise India Education</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Promise India Education</h1>
             <div className="flex items-center gap-4">
               {unreadCount > 0 && (
                 <Link href="/admin/consultations">

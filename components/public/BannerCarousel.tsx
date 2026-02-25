@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, GraduationCap } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface Banner {
     id: string;
@@ -33,7 +34,7 @@ export function BannerCarousel() {
             setCurrentIndex((prevIndex) =>
                 prevIndex === banners.length - 1 ? 0 : prevIndex + 1
             );
-        }, 5000); // Auto-advance every 5 seconds
+        }, 5000);
 
         return () => clearInterval(interval);
     }, [banners.length]);
@@ -68,92 +69,150 @@ export function BannerCarousel() {
         setCurrentIndex(index);
     };
 
-    if (loading || banners.length === 0) return null;
+    if (loading) {
+        return (
+            <section className="relative bg-gradient-to-br from-primary via-primary-600 to-secondary h-[500px] md:h-[600px]">
+                <div className="flex items-center justify-center h-full">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                </div>
+            </section>
+        );
+    }
+
+    // NO BANNERS - Show default hero section
+    if (banners.length === 0) {
+        return (
+            <section className="relative bg-gradient-to-br from-primary via-primary-600 to-secondary py-20 md:py-32">
+                <div className="container-custom">
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <div className="text-white">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+                                Your Trusted Partner for Nursing College Admissions
+                            </h1>
+                            <p className="text-xl md:text-2xl mb-8 text-gray-100">
+                                Guiding students toward top accredited nursing institutions with transparent fees and personalized support.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <Link href="/colleges">
+                                    <Button variant="secondary" size="lg">
+                                        View Colleges
+                                    </Button>
+                                </Link>
+                                <Link href="/contact?type=consultation&source=homepage">
+                                    <Button variant="danger" size="lg">
+                                        Get Free Consultation
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="hidden md:block">
+                            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                                <GraduationCap className="h-64 w-64 text-white/80 mx-auto" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     const currentBanner = banners[currentIndex];
 
-    const widthClasses = {
-        full: 'max-w-full',
-        large: 'max-w-[90%]',
-        medium: 'max-w-[75%]',
-        small: 'max-w-[60%]',
+    // Banner section width classes
+    const bannerWidthClasses = {
+        full: 'w-full',
+        container: 'container-custom',
+        large: 'w-[90%] max-w-[1600px]',
+        medium: 'w-[85%] max-w-[1400px]',
     };
 
-    const BannerContent = () => (
-        <div className="relative w-full">
-            <div className={`mx-auto ${widthClasses[currentBanner.width as keyof typeof widthClasses]}`}>
-                <div className="relative aspect-[16/6] rounded-xl overflow-hidden group">
-                    <Image
-                        src={currentBanner.imageUrl}
-                        alt={currentBanner.name}
-                        fill
-                        className="object-cover"
-                        priority
-                    />
-
-                    {/* Message Overlay */}
-                    {currentBanner.message && (
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end">
-                            <div
-                                className="p-8 text-white prose prose-invert max-w-none"
-                                dangerouslySetInnerHTML={{ __html: currentBanner.message }}
-                            />
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-
     return (
-        <section className="relative bg-background dark:bg-gray-900 py-8">
-            <div className="container-custom">
-                {/* Carousel */}
-                <div className="relative">
-                    {currentBanner.link ? (
-                        <Link href={currentBanner.link} target="_blank" rel="noopener noreferrer">
-                            <BannerContent />
-                        </Link>
-                    ) : (
-                        <BannerContent />
-                    )}
-
-                    {/* Navigation Arrows */}
-                    {banners.length > 1 && (
-                        <>
-                            <button
-                                onClick={goToPrevious}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 p-3 rounded-full shadow-lg transition-all z-10"
-                                aria-label="Previous banner"
-                            >
-                                <ChevronLeft className="h-6 w-6 text-gray-800 dark:text-gray-200" />
-                            </button>
-                            <button
-                                onClick={goToNext}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 p-3 rounded-full shadow-lg transition-all z-10"
-                                aria-label="Next banner"
-                            >
-                                <ChevronRight className="h-6 w-6 text-gray-800 dark:text-gray-200" />
-                            </button>
-                        </>
-                    )}
-
-                    {/* Dots Indicator */}
-                    {banners.length > 1 && (
-                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                            {banners.map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => goToSlide(index)}
-                                    className={`w-3 h-3 rounded-full transition-all ${index === currentIndex
-                                            ? 'bg-white w-8'
-                                            : 'bg-white/50 hover:bg-white/75'
-                                        }`}
-                                    aria-label={`Go to banner ${index + 1}`}
-                                />
-                            ))}
+        <section className="relative bg-background dark:bg-gray-900 py-8 md:py-12">
+            <div className="flex justify-center">
+                <div className={`${bannerWidthClasses[currentBanner.width as keyof typeof bannerWidthClasses]} mx-auto`}>
+                    <div className="relative h-[500px] md:h-[600px] overflow-hidden rounded-xl shadow-2xl">
+                        {/* Background Image */}
+                        <div className="absolute inset-0 z-0">
+                            <Image
+                                src={currentBanner.imageUrl}
+                                alt={currentBanner.name}
+                                fill
+                                className="object-cover"
+                                priority
+                            />
+                            {/* Dark overlay only if there's text or button */}
+                            {(currentBanner.message || currentBanner.link) && (
+                                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+                            )}
                         </div>
-                    )}
+
+                        {/* Content - Only show if message or link exists */}
+                        {(currentBanner.message || currentBanner.link) && (
+                            <div className="relative z-10 h-full flex items-center">
+                                <div className="w-full px-6 md:px-12 lg:px-16">
+                                    <div className="max-w-3xl">
+                                        <div className="text-white">
+                                            {/* Custom message from admin */}
+                                            {currentBanner.message && (
+                                                <div
+                                                    className="banner-message-content mb-8"
+                                                    dangerouslySetInnerHTML={{ __html: currentBanner.message }}
+                                                />
+                                            )}
+
+                                            {/* Button - Only show if link provided */}
+                                            {currentBanner.link && (
+                                                <div className="flex flex-col sm:flex-row gap-4">
+                                                    <Link href={currentBanner.link}>
+                                                        <Button variant="secondary" size="lg">
+                                                            View College
+                                                        </Button>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Navigation Arrows */}
+                        {banners.length > 1 && (
+                            <>
+                                <button
+                                    onClick={goToPrevious}
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-3 rounded-full shadow-lg transition-all z-20"
+                                    aria-label="Previous banner"
+                                >
+                                    <ChevronLeft className="h-6 w-6 text-white" />
+                                </button>
+                                <button
+                                    onClick={goToNext}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-3 rounded-full shadow-lg transition-all z-20"
+                                    aria-label="Next banner"
+                                >
+                                    <ChevronRight className="h-6 w-6 text-white" />
+                                </button>
+                            </>
+                        )}
+
+                        {/* Dots Indicator */}
+                        {banners.length > 1 && (
+                            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                                {banners.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => goToSlide(index)}
+                                        className={`h-3 rounded-full transition-all ${index === currentIndex
+                                            ? 'bg-white w-8'
+                                            : 'bg-white/50 hover:bg-white/75 w-3'
+                                            }`}
+                                        aria-label={`Go to banner ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </section>

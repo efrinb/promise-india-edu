@@ -49,6 +49,7 @@ export interface Admin {
   email: string;
   name: string;
   role: string;
+  profileImage: string | null;
   active: boolean;  // Add this line
   createdAt: Date;
   updatedAt: Date;
