@@ -42,39 +42,6 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary-600 to-secondary py-20 md:py-32">
-        <div className="container-custom">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="text-white">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
-                Your Trusted Partner for Nursing College Admissions
-              </h1>
-              <p className="text-xl md:text-2xl mb-8 text-gray-100">
-                Guiding students toward top accredited nursing institutions with transparent fees and personalized support.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/colleges">
-                  <Button variant="secondary" size="lg">
-                    Explore Colleges
-                  </Button>
-                </Link>
-                <Link href="/contact?type=consultation&source=homepage">
-                  <Button variant="danger" size="lg">
-                    Get Free Consultation
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="hidden md:block">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                <GraduationCap className="h-64 w-64 text-white/80 mx-auto" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Banner Carousel */}
       <BannerCarousel />
 

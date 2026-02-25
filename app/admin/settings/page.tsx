@@ -4,9 +4,18 @@ import { useEffect, useState } from 'react';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Save, Megaphone, Share2, Contact, ChevronDown, ChevronRight, Image } from 'lucide-react';
+import {
+  Save,
+  Megaphone,
+  Share2,
+  Contact,
+  ChevronDown,
+  ChevronRight,
+  Image,
+  Activity,
+  Info,
+} from 'lucide-react';
 import Link from 'next/link';
-
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -14,12 +23,11 @@ export default function SettingsPage() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  // Collapse states
-  const [contactOpen, setContactOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(true);
   const [announcementOpen, setAnnouncementOpen] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
-  const [bannersOpen, setBannersOpen] = useState(false);
 
+  const [currentAdmin, setCurrentAdmin] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     adminEmail: '',
@@ -36,6 +44,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     fetchSettings();
+    fetchCurrentAdmin();
   }, []);
 
   const fetchSettings = async () => {
@@ -57,12 +66,21 @@ export default function SettingsPage() {
           announcementText: data.settings.announcementText || '',
         });
       }
-    } catch (error) {
-      console.error('Failed to fetch settings:', error);
+    } catch {
       setError('Failed to load settings');
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchCurrentAdmin = async () => {
+    try {
+      const response = await fetch('/api/auth/me');
+      const data = await response.json();
+      if (response.ok) {
+        setCurrentAdmin(data.admin);
+      }
+    } catch { }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,8 +104,8 @@ export default function SettingsPage() {
       } else {
         setError(data.error || 'Failed to save settings');
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    } catch {
+      setError('An error occurred.');
     } finally {
       setSaving(false);
     }
@@ -96,285 +114,273 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading settings...</p>
-        </div>
+        <div className="animate-spin h-10 w-10 border-b-2 border-primary rounded-full"></div>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Settings</h1>
-        <p className="text-gray-600">Manage your site settings and contact information</p>
+
+      {/* HEADER */}
+      <div className="mb-10 flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Settings</h1>
+          <p className="text-gray-600">
+            Manage your site settings and contact information
+          </p>
+        </div>
+
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          disabled={saving}
+          form="settings-form"
+        >
+          {saving ? (
+            <>
+              <div className="animate-spin h-4 w-4 border-b-2 border-white rounded-full mr-2"></div>
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-5 w-5" />
+              Save
+            </>
+          )}
+        </Button>
       </div>
 
       {success && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-800 font-medium">✓ Settings saved successfully!</p>
+        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+          ✓ Settings saved successfully!
         </div>
       )}
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-800">{error}</p>
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+          {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form id="settings-form" onSubmit={handleSubmit}>
         <div className="space-y-6">
-          {/* Contact Information */}
-          <Card>
-            <CardBody>
-              <div className='flex items-center justify-between cursor-pointer' onClick={() => setContactOpen(!contactOpen)}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="bg-primary/10 p-3 rounded-lg">
-                    <Contact className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold">Contact Information</h2>
-                    <p className="text-sm text-gray-600">Update your contact details</p>
-                  </div>
-                </div>
-                <ChevronDown
-                  className={`h-5 w-5 transition-transform ${contactOpen ? 'rotate-180' : ''
-                    }`}
+
+          {/* ACCORDION SECTIONS */}
+          <AccordionCard
+            title="Contact Information"
+            description="Update your contact details"
+            icon={<Contact className="h-5 w-5 text-primary" />}
+            open={contactOpen}
+            setOpen={setContactOpen}
+          >
+            <div className="grid md:grid-cols-2 gap-4">
+              <Input
+                label="Admin Email"
+                type="email"
+                value={formData.adminEmail}
+                onChange={(e) =>
+                  setFormData({ ...formData, adminEmail: e.target.value })
+                }
+              />
+              <Input
+                label="Phone"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+              />
+            </div>
+
+            <textarea
+              rows={3}
+              className="textarea mt-4"
+              placeholder="Office address"
+              value={formData.address}
+              onChange={(e) =>
+                setFormData({ ...formData, address: e.target.value })
+              }
+            />
+          </AccordionCard>
+
+          <AccordionCard
+            title="Announcement Bar"
+            description="Display announcement on website"
+            icon={<Megaphone className="h-5 w-5 text-primary" />}
+            open={announcementOpen}
+            setOpen={setAnnouncementOpen}
+          >
+            <div className="space-y-4">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={formData.announcementEnabled}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      announcementEnabled: e.target.checked,
+                    })
+                  }
                 />
-              </div>
-              {contactOpen && (
-                <>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <Input
-                      label="Admin Email (for notifications)"
-                      type="email"
-                      value={formData.adminEmail}
-                      onChange={(e) => setFormData({ ...formData, adminEmail: e.target.value })}
-                      required
-                      placeholder="info@promiseindia.com"
-                    />
+                <span>Enable Announcement</span>
+              </label>
 
-                    <Input
-                      label="Contact Phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 9876543210"
-                    />
-                  </div>
+              <textarea
+                rows={3}
+                className="textarea"
+                placeholder="Announcement message..."
+                value={formData.announcementText}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    announcementText: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </AccordionCard>
 
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Office Address
-                    </label>
-                    <textarea
-                      value={formData.address}
-                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      rows={3}
-                      className="textarea"
-                      placeholder="Enter your office address"
-                    />
-                  </div>
-                </>
-              )}
-            </CardBody>
-          </Card>
+          <AccordionCard
+            title="Social Media & Messaging Links"
+            description="Add social profiles & WhatsApp"
+            icon={<Share2 className="h-5 w-5 text-primary" />}
+            open={socialOpen}
+            setOpen={setSocialOpen}
+          >
+            <Input
+              label="WhatsApp URL"
+              value={formData.whatsappUrl}
+              onChange={(e) =>
+                setFormData({ ...formData, whatsappUrl: e.target.value })
+              }
+            />
+          </AccordionCard>
 
-          {/* Announcement Section (Collapsible) */}
-          <Card>
-            <CardBody>
-              <div className='flex items-center justify-between cursor-pointer' onClick={() => setAnnouncementOpen(!announcementOpen)}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="bg-primary/10 p-3 rounded-lg">
-                    <Megaphone className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold">Announcement Bar</h2>
-                    <p className="text-sm text-gray-600">Display an announcement bar on your website</p>
-                  </div>
-                </div>
-                <ChevronDown
-                  className={`h-5 w-5 transition-transform ${announcementOpen ? 'rotate-180' : ''
-                    }`}
-                />
-              </div>
-
-              {announcementOpen && (
-                <div className="mt-6 space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={formData.announcementEnabled}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          announcementEnabled: e.target.checked,
-                        })
-                      }
-                      className="h-4 w-4 text-primary border-gray-300 rounded"
-                    />
-                    <label className="text-sm font-medium text-gray-700">
-                      Enable Announcement Bar
-                    </label>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Announcement Text
-                    </label>
-                    <textarea
-                      value={formData.announcementText}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          announcementText: e.target.value,
-                        })
-                      }
-                      rows={3}
-                      className="textarea"
-                      placeholder="Enter announcement message to display on website..."
-                    />
-                  </div>
-                </div>
-              )}
-            </CardBody>
-          </Card>
-
-          {/* Banner Management Link - NEW */}
-          <Card>
-            <CardBody>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="bg-accent/10 p-3 rounded-lg">
-                    <Image className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">Homepage Banners</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Manage carousel banners displayed on the homepage
-                    </p>
-                  </div>
-                </div>
-                <Link href="/admin/settings/banners">
-                  <Button variant="primary">
-                    Manage Banners
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </CardBody>
-          </Card>
-
-          {/* Social Media Links */}
-          <Card>
-            <CardBody>
-              <div
-                className="flex items-center justify-between cursor-pointer"
-                onClick={() => setSocialOpen(prev => !prev)}
-              >
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="bg-primary/10 p-3 rounded-lg">
-                    <Share2 className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold">Social Media & Messaging Links</h2>
-                    <p className="text-sm text-gray-600">Add links to your social media profiles and WhatsApp</p>
-                  </div>
-                </div>
-                <ChevronDown
-                  className={`h-5 w-5 transition-transform ${socialOpen ? 'rotate-180' : ''
-                    }`}
-                />
-              </div>
-              {socialOpen && (
-                <>
-                  <div className="space-y-4">
-                    <Input
-                      label="WhatsApp URL"
-                      type="url"
-                      value={formData.whatsappUrl}
-                      onChange={(e) => setFormData({ ...formData, whatsappUrl: e.target.value })}
-                      placeholder="https://wa.me/919876543210"
-                    />
-                    <p className="text-xs text-gray-500 -mt-2">
-                      Format: https://wa.me/[country_code][phone_number] (e.g., https://wa.me/919876543210)
-                    </p>
-
-                    <Input
-                      label="Facebook URL"
-                      type="url"
-                      value={formData.facebookUrl}
-                      onChange={(e) => setFormData({ ...formData, facebookUrl: e.target.value })}
-                      placeholder="https://facebook.com/promiseindia"
-                    />
-
-                    <Input
-                      label="Instagram URL"
-                      type="url"
-                      value={formData.instagramUrl}
-                      onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
-                      placeholder="https://instagram.com/promiseindia"
-                    />
-
-                    <Input
-                      label="Twitter URL"
-                      type="url"
-                      value={formData.twitterUrl}
-                      onChange={(e) => setFormData({ ...formData, twitterUrl: e.target.value })}
-                      placeholder="https://twitter.com/promiseindia"
-                    />
-
-                    <Input
-                      label="LinkedIn URL"
-                      type="url"
-                      value={formData.linkedinUrl}
-                      onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
-                      placeholder="https://linkedin.com/company/promiseindia"
-                    />
-                  </div>
-                </>
-              )}
-            </CardBody>
-          </Card>
-
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              disabled={saving}
-            >
-              {saving ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-5 w-5" />
-                  Save Settings
-                </>
-              )}
-            </Button>
+          {/* NAV CARDS */}
+          <div className="mt-4">
+            <Link href="/admin/settings/banners">
+              <NavCard
+                title="Homepage Banners"
+                description="Manage carousel banners"
+                icon={<Image className="h-5 w-5 text-accent" />}
+              />
+            </Link>
           </div>
+
+          {/* GAP ADDED HERE */}
+          {currentAdmin?.role === 'super_admin' && (
+            <div className="mt-4">
+              <Link href="/admin/settings/activity-logs">
+                <NavCard
+                  title="Activity Logs"
+                  description="Monitor admin activities"
+                  icon={<Activity className="h-5 w-5 text-purple-600" />}
+                />
+              </Link>
+            </div>
+          )}
+
+          {/* INFO CARD */}
+          <Card className="mt-8 border border-blue-200 bg-blue-50/60 rounded-2xl">
+            <CardBody>
+              <div className="flex items-start space-x-4">
+                <div className="bg-blue-100 p-3 rounded-xl">
+                  <Info className="h-5 w-5 text-blue-600" />
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-blue-900 mb-2">
+                    Important Information
+                  </h3>
+
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Admin email will receive notifications for new consultation requests</li>
+                    <li>• Contact information will be displayed on the public website footer</li>
+                    <li>• Social media links will appear in the footer with clickable icons</li>
+                    <li>• WhatsApp link format: https://wa.me/[country_code][phone] (no + or spaces)</li>
+                    <li>• Leave URL fields empty to hide those social media links</li>
+                  </ul>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+
         </div>
       </form>
-
-      {/* Info Card */}
-      <Card className="mt-6">
-        <CardBody className="bg-blue-50">
-          <h3 className="font-semibold text-blue-900 mb-2">ℹ️ Important Information</h3>
-          <ul className="text-sm text-blue-800 space-y-1">
-            <li>• Admin email will receive notifications for new consultation requests</li>
-            <li>• Contact information will be displayed on the public website footer</li>
-            <li>• Social media links will appear in the footer with clickable icons</li>
-            <li>• WhatsApp link format: https://wa.me/[country_code][phone] (no + or spaces)</li>
-            <li>• Leave URL fields empty to hide those social media links</li>
-          </ul>
-        </CardBody>
-      </Card>
     </div>
+  );
+}
+
+/* ===============================
+   REUSABLE COMPONENTS
+================================ */
+
+function AccordionCard({
+  title,
+  description,
+  icon,
+  open,
+  setOpen,
+  children,
+}: any) {
+  return (
+    <Card className="group border border-gray-200/70 hover:border-primary/40 hover:shadow-md transition-all duration-200 rounded-2xl overflow-hidden">
+      <CardBody className="p-0">
+        <div
+          onClick={() => setOpen(!open)}
+          className="flex items-center justify-between px-6 py-5 cursor-pointer bg-white hover:bg-gray-50 transition"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="bg-primary/10 group-hover:bg-primary/20 transition p-3 rounded-xl">
+              {icon}
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold">{title}</h2>
+              <p className="text-sm text-gray-500">{description}</p>
+            </div>
+          </div>
+
+          <ChevronDown
+            className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180 text-primary' : ''
+              }`}
+          />
+        </div>
+
+        <div
+          className={`transition-all duration-300 ${open
+            ? 'max-h-[1000px] opacity-100'
+            : 'max-h-0 opacity-0 overflow-hidden'
+            }`}
+        >
+          <div className="px-6 pb-6 pt-2 border-t border-gray-100 bg-gray-50/40">
+            {children}
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+  );
+}
+
+function NavCard({ title, description, icon }: any) {
+  return (
+    <Card className="group hover:shadow-lg transition-all duration-200 cursor-pointer border hover:border-primary/40 rounded-2xl">
+      <CardBody>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="bg-primary/10 group-hover:bg-primary/20 transition p-3 rounded-xl">
+              {icon}
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold group-hover:text-primary transition">
+                {title}
+              </h3>
+              <p className="text-sm text-gray-500">{description}</p>
+            </div>
+          </div>
+          <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-primary transition-transform group-hover:translate-x-1" />
+        </div>
+      </CardBody>
+    </Card>
   );
 }

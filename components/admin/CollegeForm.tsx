@@ -42,6 +42,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [uploadingVideos, setUploadingVideos] = useState(false);
 
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
@@ -61,6 +62,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
     featured: initialData?.featured || false,
     thumbnailUrl: initialData?.thumbnailUrl || '',
     galleryUrls: (initialData?.galleryUrls || []) as string[],
+    videoUrls: (initialData?.videoUrls || []) as string[],  // NEW
     googleFormUrl: initialData?.googleFormUrl || '',
     status: initialData?.status || 'draft',
   });
@@ -210,6 +212,69 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
     setFormData(prev => ({ ...prev, thumbnailUrl: '' }));
   };
 
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // Check total videos limit
+    if (formData.videoUrls.length + files.length > 5) {
+      setError('Maximum 5 videos allowed. You can upload ' + (5 - formData.videoUrls.length) + ' more.');
+      return;
+    }
+
+    // Validate file sizes and types
+    for (const file of files) {
+      const maxSize = 100 * 1024 * 1024; // 100MB
+      if (file.size > maxSize) {
+        setError(`Video ${file.name} is too large. Maximum size is 100MB`);
+        return;
+      }
+
+      const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
+      if (!allowedTypes.includes(file.type)) {
+        setError(`Video ${file.name} is not a supported format. Use MP4, WebM, OGG, or MOV`);
+        return;
+      }
+    }
+
+    setUploadingVideos(true);
+    setError('');
+
+    try {
+      const formDataToUpload = new FormData();
+      files.forEach(file => {
+        formDataToUpload.append('files', file);
+      });
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataToUpload,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormData(prev => ({
+          ...prev,
+          videoUrls: [...prev.videoUrls, ...data.urls]
+        }));
+      } else {
+        setError(data.error || 'Failed to upload videos');
+      }
+    } catch (err) {
+      setError('Failed to upload videos');
+    } finally {
+      setUploadingVideos(false);
+    }
+  };
+
+  const removeVideo = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      videoUrls: prev.videoUrls.filter((_: string, i: number) => i !== index)
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -245,6 +310,7 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
         featured: formData.featured,
         thumbnailUrl: formData.thumbnailUrl || null,
         galleryUrls: formData.galleryUrls,
+        videoUrls: formData.videoUrls,  // NEW
         googleFormUrl: formData.googleFormUrl.trim() || null,
         status: formData.status,
       };
@@ -613,6 +679,96 @@ export function CollegeForm({ collegeId, initialData }: CollegeFormProps) {
                     Uploading images...
                   </p>
                 </div>
+              )}
+            </div>
+
+            {/* Videos Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Campus Videos (Optional)</h3>
+
+              {/* Video Preview Grid */}
+              {formData.videoUrls.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Uploaded Videos ({formData.videoUrls.length}/5):
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {formData.videoUrls.map((url: string, index: number) => (
+                      <div key={index} className="relative group">
+                        <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-900">
+                          <video
+                            src={url}
+                            className="w-full h-full object-cover"
+                            preload="metadata"
+                          />
+                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <svg className="h-12 w-12 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeVideo(index)}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 truncate">
+                          Video {index + 1}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Upload New Videos */}
+              {formData.videoUrls.length < 5 && (
+                <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6">
+                  <div className="text-center">
+                    <svg className="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <label className="cursor-pointer">
+                      <span className="text-primary hover:text-primary-600 font-medium">
+                        {uploadingVideos ? 'Uploading...' : 'Click to upload videos'}
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                        multiple
+                        onChange={handleVideoUpload}
+                        disabled={uploadingVideos || formData.videoUrls.length >= 5}
+                      />
+                    </label>
+                    <p className="text-sm text-gray-500 mt-2">
+                      MP4, WebM, OGG, MOV up to 100MB per video
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {formData.videoUrls.length}/5 videos • {5 - formData.videoUrls.length} remaining
+                    </p>
+                  </div>
+
+                  {uploadingVideos && (
+                    <div className="mt-4">
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                        <div className="bg-primary h-full rounded-full animate-pulse" style={{ width: '100%' }}></div>
+                      </div>
+                      <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-2">
+                        Uploading videos... Please wait
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {formData.videoUrls.length >= 5 && (
+                <p className="text-sm text-amber-600 dark:text-amber-400 mt-2">
+                  Maximum 5 videos reached. Remove a video to upload more.
+                </p>
               )}
             </div>
 

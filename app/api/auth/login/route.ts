@@ -10,15 +10,31 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validatedData = loginSchema.parse(body);
 
-    // Find admin
+    // Find admin with profileImage
     const admin = await prisma.admin.findUnique({
       where: { email: validatedData.email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        password: true,
+        role: true,
+        active: true,
+        profileImage: true,
+      },
     });
 
     if (!admin) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
+      );
+    }
+
+    if (!admin.active) {
+      return NextResponse.json(
+        { error: 'Account is deactivated' },
+        { status: 403 }
       );
     }
 
@@ -42,12 +58,33 @@ export async function POST(request: NextRequest) {
     // Set cookie
     await setAuthCookie(token);
 
+    // Log login activity
+    try {
+      const ipAddress = request.headers.get('x-forwarded-for') || 
+                        request.headers.get('x-real-ip') || 
+                        'unknown';
+      const userAgent = request.headers.get('user-agent') || 'unknown';
+
+      await prisma.adminActivity.create({
+        data: {
+          adminId: admin.id,
+          action: 'login',
+          ipAddress,
+          userAgent,
+        },
+      });
+    } catch (activityError) {
+      // Don't fail login if activity logging fails
+      console.error('Failed to log login activity:', activityError);
+    }
+
     return NextResponse.json({
       success: true,
       admin: {
         id: admin.id,
         email: admin.email,
         name: admin.name,
+        profileImage: admin.profileImage,
         role: admin.role,
       },
     });
