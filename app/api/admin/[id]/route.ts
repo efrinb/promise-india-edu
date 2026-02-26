@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAuth, hashPassword } from '@/lib/auth';
 import { z } from 'zod';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 
 const updateAdminSchema = z.object({
   email: z.string().email().optional(),
@@ -88,6 +89,23 @@ export async function PUT(
       },
     });
 
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'update',
+        'admin',
+        updatedAdmin.id,
+        { 
+          name: updatedAdmin.name,
+          changedFields: Object.keys(updateData)
+        }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
+
     return NextResponse.json({ admin: updatedAdmin });
   } catch (error: any) {
     console.error('Error updating admin:', error);
@@ -141,6 +159,20 @@ export async function DELETE(
     await prisma.admin.delete({
       where: { id: params.id },
     });
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'delete',
+        'admin',
+        params.id,
+        { name: adminToDelete.name, email: adminToDelete.email }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

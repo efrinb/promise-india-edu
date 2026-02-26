@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { bannerSchema } from '@/lib/validations';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 
 // GET /api/banners/[id]
 export async function GET(
@@ -36,7 +37,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await requireAuth();
+    const currentAdmin = await requireAuth();
 
     const body = await request.json();
     const validatedData = bannerSchema.parse(body);
@@ -60,6 +61,20 @@ export async function PUT(
         link: validatedData.link || null,
       },
     });
+
+        // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'update',
+        'banner',
+        banner.id,
+        { name: banner.name, uniqueId: banner.uniqueId }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ banner });
   } catch (error: any) {
@@ -85,11 +100,37 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await requireAuth();
+    const currentAdmin = await requireAuth();
+
+    const banner = await prisma.banner.delete({
+      where: { id: params.id },
+      select: { id: true, name: true, uniqueId: true }
+    });
+
+    if (!banner) {
+      return NextResponse.json(
+        { error: 'Banner not found' },
+        { status: 404 }
+      );
+    }
 
     await prisma.banner.delete({
       where: { id: params.id },
     });
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'delete',
+        'banner',
+        params.id,
+        { name: banner.name, uniqueId: banner.uniqueId }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

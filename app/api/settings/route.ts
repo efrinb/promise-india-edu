@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { settingsSchema } from '@/lib/validations';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 
 // GET /api/settings - Get settings (public read)
 export async function GET() {
@@ -28,7 +29,7 @@ export async function GET() {
 // PUT /api/settings - Update settings (admin only)
 export async function PUT(request: NextRequest) {
   try {
-    await requireAuth();
+    const currentAdmin = await requireAuth();
 
     const body = await request.json();
     const validatedData = settingsSchema.parse(body);
@@ -46,6 +47,20 @@ export async function PUT(request: NextRequest) {
       settings = await prisma.settings.create({
         data: validatedData,
       });
+    }
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'update',
+        'settings',
+        settings.id,
+        { changedFields: Object.keys(validatedData) }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
     }
 
     return NextResponse.json({ settings });
