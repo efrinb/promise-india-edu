@@ -2,24 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { collegeSchema } from '@/lib/validations';
-import { generateSlug } from '@/lib/utils';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 
-// GET /api/colleges/[id] - Get single college by ID or slug
+// GET /api/colleges/[id]
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
-
-    // Try to find by ID first, then by slug
-    const college = await prisma.college.findFirst({
-      where: {
-        OR: [
-          { id },
-          { slug: id },
-        ],
-      },
+    const college = await prisma.college.findUnique({
+      where: { id: params.id },
     });
 
     if (!college) {
@@ -39,58 +31,43 @@ export async function GET(
   }
 }
 
-// PUT /api/colleges/[id] - Update college (admin only)
+// PUT /api/colleges/[id]
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await requireAuth();
+    const currentAdmin = await requireAuth();
 
-    const { id } = params;
     const body = await request.json();
     const validatedData = collegeSchema.parse(body);
 
-    // Check if college exists
-    const existingCollege = await prisma.college.findUnique({
-      where: { id },
+    // Get original college data for logging
+    const originalCollege = await prisma.college.findUnique({
+      where: { id: params.id },
     });
-
-    if (!existingCollege) {
-      return NextResponse.json(
-        { error: 'College not found' },
-        { status: 404 }
-      );
-    }
-
-    // Generate new slug if name changed
-    let slug = existingCollege.slug;
-    if (validatedData.name !== existingCollege.name) {
-      slug = generateSlug(validatedData.name);
-      
-      // Check if new slug already exists
-      const slugExists = await prisma.college.findFirst({
-        where: {
-          slug,
-          NOT: { id },
-        },
-      });
-
-      if (slugExists) {
-        return NextResponse.json(
-          { error: 'A college with this name already exists' },
-          { status: 400 }
-        );
-      }
-    }
 
     const college = await prisma.college.update({
-      where: { id },
-      data: {
-        ...validatedData,
-        slug,
-      },
+      where: { id: params.id },
+      data: validatedData,
     });
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'update',
+        'college',
+        college.id,
+        { 
+          name: college.name,
+          changedFields: Object.keys(validatedData)
+        }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ college });
   } catch (error: any) {
@@ -110,18 +87,18 @@ export async function PUT(
   }
 }
 
-// DELETE /api/colleges/[id] - Delete college (admin only)
+// DELETE /api/colleges/[id]
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await requireAuth();
+    const currentAdmin = await requireAuth();
 
-    const { id } = params;
-
+    // Get college info before deleting
     const college = await prisma.college.findUnique({
-      where: { id },
+      where: { id: params.id },
+      select: { id: true, name: true, slug: true }
     });
 
     if (!college) {
@@ -132,8 +109,22 @@ export async function DELETE(
     }
 
     await prisma.college.delete({
-      where: { id },
+      where: { id: params.id },
     });
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'delete',
+        'college',
+        params.id,
+        { name: college.name, slug: college.slug }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

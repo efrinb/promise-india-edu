@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { collegeSchema } from '@/lib/validations';
 import { generateSlug } from '@/lib/utils';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 
 // GET /api/colleges - Public: get published colleges
 export async function GET(request: NextRequest) {
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
 // POST /api/colleges - Admin only: create college
 export async function POST(request: NextRequest) {
   try {
-    await requireAuth();
+    const currentAdmin = await requireAuth();
 
     const body = await request.json();
     const validatedData = collegeSchema.parse(body);
@@ -84,6 +85,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'create',
+        'college',
+        college.id,
+        { name: college.name, slug: college.slug }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
+
     return NextResponse.json({ college }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating college:', error);
@@ -92,6 +107,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      );
+    }
+
+    if (error.errors) {
+      return NextResponse.json(
+        { error: 'Validation error', details: error.errors },
+        { status: 400 }
       );
     }
 

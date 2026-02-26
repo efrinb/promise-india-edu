@@ -6,6 +6,7 @@ import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { formatDateTime } from '@/lib/utils';
+import Image from 'next/image';
 
 export default function AdminsManagementPage() {
     const [admins, setAdmins] = useState<any[]>([]);
@@ -231,14 +232,29 @@ export default function AdminsManagementPage() {
                         <CardBody>
                             <div className="flex items-start justify-between">
                                 <div className="flex items-start space-x-3">
-                                    <div className={`p-3 rounded-full ${admin.role === 'super_admin' ? 'bg-purple-100' : 'bg-blue-100'
-                                        }`}>
-                                        {admin.role === 'super_admin' ? (
-                                            <Shield className="h-5 w-5 text-purple-600" />
-                                        ) : (
-                                            <User className="h-5 w-5 text-blue-600" />
-                                        )}
-                                    </div>
+                                    {admin?.profileImage ? (
+                                        <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                            <Image
+                                                src={admin.profileImage}
+                                                alt={admin.name}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className={`p-3 rounded-full ${admin.role === 'super_admin'
+                                                ? 'bg-purple-100'
+                                                : 'bg-blue-100'
+                                                }`}
+                                        >
+                                            {admin.role === 'super_admin' ? (
+                                                <Shield className="h-5 w-5 text-purple-600" />
+                                            ) : (
+                                                <User className="h-5 w-5 text-blue-600" />
+                                            )}
+                                        </div>
+                                    )}
                                     <div>
                                         <h3 className="text-lg font-bold">{admin.name}</h3>
                                         <p className="text-sm text-gray-600">{admin.email}</p>

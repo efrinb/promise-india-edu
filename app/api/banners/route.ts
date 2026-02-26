@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { bannerSchema } from '@/lib/validations';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 
 // GET /api/banners - Public: get active banners
 export async function GET(request: NextRequest) {
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
 // POST /api/banners - Admin only: create banner
 export async function POST(request: NextRequest) {
   try {
-    await requireAuth();
+    const currentAdmin = await requireAuth();
 
     const body = await request.json();
     const validatedData = bannerSchema.parse(body);
@@ -60,6 +61,20 @@ export async function POST(request: NextRequest) {
         link: validatedData.link || null,
       },
     });
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'create',
+        'banner',
+        banner.id,
+        { name: banner.name, uniqueId: banner.uniqueId }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ banner }, { status: 201 });
   } catch (error: any) {

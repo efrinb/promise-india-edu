@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAuth, hashPassword } from '@/lib/auth';
 import { z } from 'zod';
+import { logActivityFromRequest } from '@/lib/activity-logger';
 
 const adminSchema = z.object({
   email: z.string().email(),
@@ -30,6 +31,7 @@ export async function GET() {
         name: true,
         role: true,
         active: true,
+        profileImage: true,
         createdAt: true,
         updatedAt: true,
         createdBy: true,
@@ -39,6 +41,7 @@ export async function GET() {
 
     return NextResponse.json({ admins });
   } catch (error: any) {
+    console.error('Error fetching admins:', error);
     if (error.message === 'Unauthorized') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -94,6 +97,20 @@ export async function POST(request: NextRequest) {
         createdAt: true,
       },
     });
+
+    // Log activity
+    try {
+      await logActivityFromRequest(
+        currentAdmin.id,
+        request,
+        'create',
+        'admin',
+        newAdmin.id,
+        { name: newAdmin.name, email: newAdmin.email, role: newAdmin.role }
+      );
+    } catch (activityError) {
+      console.error('Failed to log activity:', activityError);
+    }
 
     return NextResponse.json({ admin: newAdmin }, { status: 201 });
   } catch (error: any) {
