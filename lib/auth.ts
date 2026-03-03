@@ -3,7 +3,14 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { prisma } from './db';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+// JWT_SECRET MUST be set in your .env file. The app will refuse to start without it.
+if (!process.env.JWT_SECRET) {
+  throw new Error(
+    'FATAL: JWT_SECRET environment variable is not set. ' +
+    'Please add JWT_SECRET to your .env file before starting the app.'
+  );
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 const TOKEN_NAME = 'admin_token';
 
 export interface AdminTokenPayload {

@@ -76,8 +76,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!validatedData.password) {
+      return NextResponse.json(
+        { error: 'Password is required when creating a new admin' },
+        { status: 400 }
+      );
+    }
+
     // Hash password
-    const hashedPassword = await hashPassword(validatedData.password || 'changeme123');
+    const hashedPassword = await hashPassword(validatedData.password);
 
     const newAdmin = await prisma.admin.create({
       data: {

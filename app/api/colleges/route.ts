@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { requireAuth } from '@/lib/auth';
+import { requireAuth, getCurrentAdmin } from '@/lib/auth';
 import { collegeSchema } from '@/lib/validations';
 import { generateSlug } from '@/lib/utils';
 import { logActivityFromRequest } from '@/lib/activity-logger';
 
-// GET /api/colleges - Public: get published colleges
+// GET /api/colleges - Public: get published colleges. Admins can also see drafts.
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -17,12 +17,17 @@ export async function GET(request: NextRequest) {
 
     const where: any = {};
 
-    // Public users only see published colleges
-    if (!searchParams.get('admin')) {
-      where.status = 'published';
-    } else {
-      // Admin can filter by status
+    // Check if the request comes from an authenticated admin.
+    // Admins can filter by status (e.g. see drafts).
+    // Public visitors ALWAYS only see published colleges — no ?admin=true bypass.
+    const currentAdmin = await getCurrentAdmin();
+
+    if (currentAdmin) {
+      // Authenticated admins can filter by status
       if (status) where.status = status;
+    } else {
+      // Public visitors only see published colleges
+      where.status = 'published';
     }
 
     if (category) where.category = category;
