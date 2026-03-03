@@ -8,23 +8,46 @@ interface ConsultationEmailData {
   message?: string;
 }
 
+// Escapes HTML special characters in user-supplied strings before they are
+// inserted into email HTML templates. This prevents a user from submitting
+// values like "<script>alert(1)</script>" that could alter the email layout
+// or inject malicious content visible to the admin reading the email.
+function escapeHtml(value: string | undefined | null): string {
+  if (!value) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
+
 export async function sendConsultationNotification(
   data: ConsultationEmailData,
   adminEmail: string
 ) {
   try {
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    const transporter = createTransporter();
 
-    // Email HTML template
+    // All user values are escaped before being placed in the HTML template
+    const safeName    = escapeHtml(data.name);
+    const safePhone   = escapeHtml(data.phone);
+    const safeEmail   = escapeHtml(data.email);
+    const safeCity    = escapeHtml(data.city);
+    const safeMessage = escapeHtml(data.message);
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -49,36 +72,28 @@ export async function sendConsultationNotification(
             <div class="content">
               <div class="field">
                 <div class="label">Name:</div>
-                <div class="value">${data.name}</div>
+                <div class="value">${safeName}</div>
               </div>
               <div class="field">
                 <div class="label">Phone:</div>
-                <div class="value">${data.phone}</div>
+                <div class="value">${safePhone}</div>
               </div>
               <div class="field">
                 <div class="label">Email:</div>
-                <div class="value">${data.email}</div>
+                <div class="value">${safeEmail}</div>
               </div>
-              ${
-                data.city
-                  ? `
+              ${safeCity ? `
               <div class="field">
                 <div class="label">City:</div>
-                <div class="value">${data.city}</div>
+                <div class="value">${safeCity}</div>
               </div>
-              `
-                  : ''
-              }
-              ${
-                data.message
-                  ? `
+              ` : ''}
+              ${safeMessage ? `
               <div class="field">
                 <div class="label">Message:</div>
-                <div class="value">${data.message}</div>
+                <div class="value">${safeMessage}</div>
               </div>
-              `
-                  : ''
-              }
+              ` : ''}
             </div>
             <div class="footer">
               <p>This is an automated notification from Promise India Education Consultancy</p>
@@ -88,11 +103,10 @@ export async function sendConsultationNotification(
       </html>
     `;
 
-    // Send email
     await transporter.sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: adminEmail,
-      subject: `New Consultation Request from ${data.name}`,
+      subject: `New Consultation Request from ${safeName}`,
       html: htmlContent,
       text: `
 New Consultation Request
@@ -114,15 +128,9 @@ Message: ${data.message || 'N/A'}
 
 export async function sendWelcomeEmail(email: string, name: string) {
   try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    const transporter = createTransporter();
+
+    const safeName = escapeHtml(name);
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -142,7 +150,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
               <h2>Thank You for Your Interest!</h2>
             </div>
             <div class="content">
-              <p>Dear ${name},</p>
+              <p>Dear ${safeName},</p>
               <p>Thank you for reaching out to Promise India Education Consultancy. We have received your consultation request and our team will get in touch with you shortly.</p>
               <p>In the meantime, feel free to explore our website to learn more about the nursing colleges and programs we offer.</p>
               <p>If you have any urgent queries, please don't hesitate to contact us.</p>

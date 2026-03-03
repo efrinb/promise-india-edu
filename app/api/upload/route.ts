@@ -8,6 +8,21 @@ const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB for videos
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
 
+// Map MIME types to safe file extensions.
+// Extension is derived from the validated MIME type — NOT from the user's filename.
+// This prevents attacks where someone names a malicious file "virus.php.jpg".
+const MIME_TO_EXT: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
+  'video/ogg': 'ogv',
+  'video/quicktime': 'mov',
+};
+
 export async function POST(request: NextRequest) {
   try {
     await requireAuth();
@@ -51,10 +66,18 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Generate unique filename
+      // Get extension from MIME type (not from the original filename)
+      const extension = MIME_TO_EXT[file.type];
+      if (!extension) {
+        return NextResponse.json(
+          { error: `Unsupported file type: ${file.type}` },
+          { status: 400 }
+        );
+      }
+
+      // Generate a fully random filename — never use any part of the original filename
       const timestamp = Date.now();
       const randomString = Math.random().toString(36).substring(2, 15);
-      const extension = file.name.split('.').pop();
       const filename = `${timestamp}-${randomString}.${extension}`;
 
       // Convert file to buffer and save
