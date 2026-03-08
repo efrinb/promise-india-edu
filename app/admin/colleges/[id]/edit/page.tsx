@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 import { CollegeForm } from '@/components/admin/CollegeForm';
 
 async function getCollege(id: string) {
@@ -14,6 +15,8 @@ export default async function EditCollegePage({
 }: {
   params: { id: string };
 }) {
+  await requireAuth();
+
   const college = await getCollege(params.id);
 
   if (!college) {
