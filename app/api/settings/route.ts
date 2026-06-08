@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth';
 import { settingsSchema } from '@/lib/validations';
 import { logActivityFromRequest } from '@/lib/activity-logger';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/settings - Get settings (public read)
 export async function GET() {
   try {
