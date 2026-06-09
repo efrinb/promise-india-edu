@@ -33,14 +33,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        // Allow images served from your own domain in production
+        protocol: "https",
+        hostname: "icsxzcstribzvpppehvq.supabase.co",
+      },
+      {
         protocol: "https",
         hostname: process.env.NEXT_PUBLIC_APP_URL
           ? new URL(process.env.NEXT_PUBLIC_APP_URL).hostname
           : "localhost",
       },
       {
-        // Allow localhost for local development
         protocol: "http",
         hostname: "localhost",
       },
