@@ -139,7 +139,7 @@ export default function AdminDashboardPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-text-light dark:text-gray-400">Welcome to Promise India Education Admin Panel</p>
+        <p className="text-text-light dark:text-gray-400">Welcome to Promise Land India Education Admin Panel</p>
       </div>
 
       {/* Main Stats */}

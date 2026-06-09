@@ -7,21 +7,21 @@ const testimonials = [
         course: 'BSc Nursing',
         college: 'St. Mary\'s College of Nursing',
         rating: 5,
-        text: 'Promise India helped me get admission to my dream nursing college. The counselors were very supportive and guided me through the entire process. Highly recommended!',
+        text: 'Promise Land India helped me get admission to my dream nursing college. The counselors were very supportive and guided me through the entire process. Highly recommended!',
     },
     {
         name: 'Rahul Kumar',
         course: 'GNM',
         college: 'Amrita College of Nursing',
         rating: 5,
-        text: 'The team at Promise India made my admission journey so smooth. They provided complete transparency about fees and helped me choose the right college for my career.',
+        text: 'The team at Promise Land India made my admission journey so smooth. They provided complete transparency about fees and helped me choose the right college for my career.',
     },
     {
         name: 'Ananya Menon',
         course: 'MSc Nursing',
         college: 'Believers Church Medical College',
         rating: 5,
-        text: 'I was confused about which nursing college to choose, but Promise India counselors gave me excellent guidance. Now I\'m pursuing my MSc Nursing at a top institution!',
+        text: 'I was confused about which nursing college to choose, but Promise Land India counselors gave me excellent guidance. Now I\'m pursuing my MSc Nursing at a top institution!',
     },
 ];
 

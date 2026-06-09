@@ -67,7 +67,7 @@ export async function sendConsultationNotification(
           <div class="container">
             <div class="header">
               <h2>New Consultation Request</h2>
-              <p>Promise India Education Consultancy</p>
+              <p>Promise Land India Education Consultancy</p>
             </div>
             <div class="content">
               <div class="field">
@@ -96,7 +96,7 @@ export async function sendConsultationNotification(
               ` : ''}
             </div>
             <div class="footer">
-              <p>This is an automated notification from Promise India Education Consultancy</p>
+              <p>This is an automated notification from Promise Land India Education Consultancy</p>
             </div>
           </div>
         </body>
@@ -151,10 +151,10 @@ export async function sendWelcomeEmail(email: string, name: string) {
             </div>
             <div class="content">
               <p>Dear ${safeName},</p>
-              <p>Thank you for reaching out to Promise India Education Consultancy. We have received your consultation request and our team will get in touch with you shortly.</p>
+              <p>Thank you for reaching out to Promise Land India Education Consultancy. We have received your consultation request and our team will get in touch with you shortly.</p>
               <p>In the meantime, feel free to explore our website to learn more about the nursing colleges and programs we offer.</p>
               <p>If you have any urgent queries, please don't hesitate to contact us.</p>
-              <p>Best regards,<br>Promise India Education Consultancy Team</p>
+              <p>Best regards,<br>Promise Land India Education Consultancy Team</p>
             </div>
           </div>
         </body>

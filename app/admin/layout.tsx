@@ -180,7 +180,7 @@ function AdminLayoutContent({
             >
               {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Promise India Education</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Promise Land India Education</h1>
             <div className="flex items-center gap-4">
               {unreadCount > 0 && (
                 <Link href="/admin/consultations">

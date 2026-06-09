@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 const OFFICE_GALLERY = [
   {
     src: '/gallery/reception-area.jpg',
-    alt: 'Promise India Office Reception',
+    alt: 'Promise Land India Office Reception',
     title: 'Modern Reception Area'
   },
   {
@@ -44,7 +44,7 @@ export default function AboutPage() {
       <section className="bg-gradient-to-br from-primary to-secondary py-20">
         <div className="container-custom">
           <div className="text-center text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">About Promise India</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">About Promise Land India</h1>
             <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-100">
               Your trusted partner in nursing education, dedicated to empowering aspiring nurses with transparent guidance and unwavering support.
             </p>
@@ -99,7 +99,7 @@ export default function AboutPage() {
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Story</h2>
             <p className="text-lg text-gray-700 leading-relaxed">
-              Promise India Education Consultancy was founded with a simple yet powerful vision: to make quality nursing
+              Promise Land India Education Consultancy was founded with a simple yet powerful vision: to make quality nursing
               education accessible to every aspiring healthcare professional. We recognized the challenges students face
               in navigating the complex admission process and the lack of transparent information about colleges and fees.
             </p>
@@ -216,7 +216,7 @@ export default function AboutPage() {
       <section className="section">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Promise India?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Promise Land India?</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               What sets us apart in education consultancy
             </p>

@@ -2,17 +2,28 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Promise India Education Consultancy',
-  description: 'Your trusted partner for nursing college admissions with transparent fees and personalized support.',
-  icons: {
-    icon: [
-      {
-        url: '/favicon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+  title: {
+    default: "Promise Land India Education Consultancy",
+    template: "%s | Promise Land India",
+  },
+  description:
+    "Leading nursing education consultancy in India. Get guidance for nursing admissions, colleges, placements, and career opportunities.",
+  keywords: [
+    "nursing admission",
+    "nursing consultancy",
+    "BSc Nursing",
+    "GNM Nursing",
+    "Kerala nursing admission",
+    "Promise Land India",
+  ],
+  metadataBase: new URL("https://promiselandindia.com"),
+  openGraph: {
+    title: "Promise Land India Education Consultancy",
+    description:
+      "Trusted partner for nursing college admissions and career guidance.",
+    url: "https://promiselandindia.com",
+    siteName: "Promise Land India",
+    type: "website",
   },
 };
 

@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
               </div>
             </div>
             <h1 className="text-3xl font-bold mb-2">Admin Login</h1>
-            <p className="text-gray-600">Promise India Education Consultancy</p>
+            <p className="text-gray-600">Promise Land India Education Consultancy</p>
           </div>
 
           {error && (

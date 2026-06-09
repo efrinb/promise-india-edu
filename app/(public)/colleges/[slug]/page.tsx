@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!college) {
     return {
-      title: 'College Not Found | Promise India',
+      title: 'College Not Found | Promise Land India',
     };
   }
 
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fees = college.fees as any;
   const currentYear = new Date().getFullYear();
 
-  const title = `${college.name} | Fees, Courses, Admission ${currentYear} | Promise India`;
+  const title = `${college.name} | Fees, Courses, Admission ${currentYear} | Promise Land India`;
   const description = `${college.shortDescription} Offering ${courses}. Total Fee: ₹${fees.total?.toLocaleString('en-IN')}. Apply now for ${currentYear} admissions. Located in ${college.location}.`;
 
   return {
@@ -45,14 +45,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       'fees',
       currentYear.toString(),
       ...college.courses,
-      'Promise India',
+      'Promise Land India',
     ].join(', '),
     openGraph: {
       title,
       description,
       type: 'website',
       url: `https://promiseindia.com/colleges/${college.slug}`,
-      siteName: 'Promise India Education Consultancy',
+      siteName: 'Promise Land India Education Consultancy',
       images: college.thumbnailUrl ? [
         {
           url: college.thumbnailUrl,

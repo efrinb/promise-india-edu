@@ -17,7 +17,7 @@ function question(query: string): Promise<string> {
 
 async function setupProduction() {
   console.log('╔════════════════════════════════════════════╗');
-  console.log('║  Promise India - Initial Setup             ║');
+  console.log('║  Promise Land India - Initial Setup             ║');
   console.log('╚════════════════════════════════════════════╝\n');
 
   try {

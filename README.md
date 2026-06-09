@@ -1,4 +1,4 @@
-# Promise India Education Consultancy
+# Promise Land India Education Consultancy
 
 A modern, full-stack education consultancy platform built with Next.js 14, TypeScript, Tailwind CSS, and PostgreSQL. The platform specializes in nursing college admissions with features for college listings, consultation management, and comprehensive admin controls.
 
@@ -178,7 +178,7 @@ Follow the interactive prompts to enter:
 **Example:**
 
 ```
-=== Promise India - Initial Setup ===
+=== Promise Land India - Initial Setup ===
 
 --- Create Super Admin ---
 
@@ -1045,6 +1045,6 @@ For technical support or questions:
 
 ---
 
-**Built with ❤️ for Promise India Education Consultancy**
+**Built with ❤️ for Promise Land India Education Consultancy**
 
 Last Updated: 2026-02-15
