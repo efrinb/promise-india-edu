@@ -153,7 +153,7 @@ export default async function CollegeDetailPage({ params }: Props) {
                 </span>
               </div>
 
-              <h1 className="text-3xl md:text-5xl font-bold mb-3">{college.name}</h1>
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 text-white">{college.name}</h1>
               <div className="flex items-center text-lg">
                 <MapPin className="h-5 w-5 mr-2" />
                 <span>{college.location}</span>

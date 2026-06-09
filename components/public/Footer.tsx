@@ -22,7 +22,7 @@ export function Footer() {
           <div>
             <h3 className="text-xl font-bold mb-4">About Us</h3>
             <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed">
-              Promise India Education Consultancy is your trusted partner for nursing college admissions,
+              Promise Land India Education Consultancy is your trusted partner for nursing college admissions,
               providing transparent guidance and personalized support to help you achieve your career goals.
             </p>
           </div>
@@ -147,7 +147,7 @@ export function Footer() {
 
         <div className="border-t border-white/20 dark:border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-300 dark:text-gray-400 text-sm">
-            © 2026 Promise India Education Consultancy. All Rights Reserved.
+            © 2026 Promise Land India Education Consultancy. All Rights Reserved.
           </p>
         </div>
       </div >
