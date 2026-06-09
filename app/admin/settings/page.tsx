@@ -248,13 +248,52 @@ export default function SettingsPage() {
             open={socialOpen}
             setOpen={setSocialOpen}
           >
-            <Input
-              label="WhatsApp URL"
-              value={formData.whatsappUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, whatsappUrl: e.target.value })
-              }
-            />
+            <div className="space-y-4">
+              <Input
+                label="WhatsApp URL"
+                placeholder="https://wa.me/919999999999"
+                value={formData.whatsappUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, whatsappUrl: e.target.value })
+                }
+              />
+
+              <Input
+                label="Facebook URL"
+                placeholder="https://facebook.com/yourpage"
+                value={formData.facebookUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, facebookUrl: e.target.value })
+                }
+              />
+
+              <Input
+                label="Instagram URL"
+                placeholder="https://instagram.com/yourprofile"
+                value={formData.instagramUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, instagramUrl: e.target.value })
+                }
+              />
+
+              <Input
+                label="LinkedIn URL"
+                placeholder="https://linkedin.com/company/yourcompany"
+                value={formData.linkedinUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, linkedinUrl: e.target.value })
+                }
+              />
+
+              <Input
+                label="Twitter / X URL"
+                placeholder="https://x.com/yourprofile"
+                value={formData.twitterUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, twitterUrl: e.target.value })
+                }
+              />
+            </div>
           </AccordionCard>
 
           {/* NAV CARDS */}
