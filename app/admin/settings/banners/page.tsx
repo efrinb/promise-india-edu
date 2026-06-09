@@ -11,7 +11,7 @@ import dynamic from 'next/dynamic';
 
 // Dynamically import React Quill to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.snow.css';
 
 export default function BannersManagementPage() {
     const [banners, setBanners] = useState<any[]>([]);

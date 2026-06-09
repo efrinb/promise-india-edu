@@ -147,7 +147,7 @@ export function Footer() {
 
         <div className="border-t border-white/20 dark:border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-300 dark:text-gray-400 text-sm">
-            © 2026 Promise Land India Education Consultancy. All Rights Reserved.
+            ©{new Date().getFullYear()} Promise Land India Education Consultancy. All Rights Reserved.
           </p>
         </div>
       </div >
