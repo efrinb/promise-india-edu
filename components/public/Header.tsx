@@ -23,7 +23,7 @@ export function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <GraduationCap className="h-8 w-8 text-primary dark:text-primary-400" />
             <span className="text-xl font-bold text-primary dark:text-primary-400">
-              Promise India Education Consultancy
+              Promise Land India Education Consultancy
             </span>
           </Link>
 
