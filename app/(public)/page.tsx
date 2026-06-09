@@ -21,7 +21,7 @@ import { formatCurrency } from '@/lib/utils';
 import { BannerCarousel } from '@/components/public/BannerCarousel';
 
 export const metadata = {
-  title: 'Promise India Education Consultancy - Nursing College Admissions',
+  title: 'Promise Land India Education Consultancy - Nursing College Admissions',
   description: 'Your trusted partner for nursing college admissions with transparent fees and personalized support.',
 };
 
@@ -90,7 +90,7 @@ export default async function HomePage() {
       <section className="section bg-background dark:bg-gray-900">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Promise India?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Promise Land India?</h2>
             <p className="text-xl text-text-light max-w-3xl mx-auto">
               We stand out with our commitment to transparency, personalized care, and proven track record.
             </p>
