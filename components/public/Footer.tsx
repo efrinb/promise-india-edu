@@ -112,7 +112,7 @@ export async function Footer() {
           <Link href="/privacy-policy" className="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors text-sm">
             Privacy Policy
           </Link>
-          <Link href="/terms" className="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors text-sm">
+          <Link href="/terms-conditions" className="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors text-sm">
             Terms &amp; Conditions
           </Link>
         </div>

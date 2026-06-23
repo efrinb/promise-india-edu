@@ -36,6 +36,8 @@ async function getHomepageData() {
   }
 }
 
+export const revalidate = 60; // Re-fetch from DB every 60 seconds (ISR)
+
 export const metadata = {
   title: 'Start Your Nursing Career with Expert Guidance | Promise Land India',
   description: 'Your trusted partner for nursing college admissions with transparent fees and personalized support.',
