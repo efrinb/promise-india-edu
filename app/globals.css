@@ -6,17 +6,17 @@
 
 @layer base {
   :root {
-    --primary: #0F5132;
-    --secondary: #28A745;
-    --accent: #B02A37;
+    --primary: #001B4D;
+    --secondary: #D9A441;
+    --accent: #C9952F;
     --background: #F8F9FA;
     --text: #1F2937;
   }
 
   .dark {
-    --primary: #47AF77;
-    --secondary: #4FBF67;
-    --accent: #E75F67;
+    --primary: #082C72;
+    --secondary: #D9A441;
+    --accent: #C9952F;
     --background: #1F2937;
     --text: #F8F9FA;
   }
@@ -28,7 +28,7 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-plus-jakarta), system-ui, sans-serif;
     @apply bg-background dark:bg-gray-900 text-text dark:text-gray-100;
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -44,6 +44,7 @@
     line-height: 1.2;
     @apply text-primary dark:text-primary-400;
     transition: color 0.3s ease;
+    font-family: var(--font-plus-jakarta), system-ui, sans-serif;
   }
 
   h1 {
@@ -142,14 +143,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: #001B4D;
   border-radius: 5px;
-  @apply dark:bg-primary-600;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary);
-  @apply dark:bg-secondary-600;
+  background: #D9A441;
 }
 
 @keyframes fadeIn {
@@ -166,6 +165,59 @@
 
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
+}
+
+/* ── Testimonial card stagger (fires on page load via CSS) ─────────────
+   Apply .card-stagger-N to each card; they fade+rise in sequence.
+──────────────────────────────────────────────────────────────────────── */
+@keyframes cardRiseIn {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-stagger {
+  opacity: 0;
+  animation: cardRiseIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.card-stagger-1 { animation-delay: 0.1s; }
+.card-stagger-2 { animation-delay: 0.28s; }
+.card-stagger-3 { animation-delay: 0.46s; }
+.card-stagger-4 { animation-delay: 0.62s; }
+
+/* ── Smooth Card Hover ─────────────────────────────────────────
+   Use .card-hover for large lift (homepage/courses/about/admission).
+   Use .card-hover-sm for subtle lift (FAQ, feature badges, etc.).
+   Both use 500ms ease-out for a premium, silk-smooth feel.
+──────────────────────────────────────────────────────────────── */
+.card-hover {
+  will-change: transform, box-shadow;
+  transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -8px rgba(0, 27, 77, 0.18),
+    0 8px 16px -4px rgba(0, 27, 77, 0.10);
+}
+
+.card-hover-sm {
+  will-change: transform, box-shadow;
+  transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-hover-sm:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -6px rgba(0, 27, 77, 0.14),
+    0 4px 10px -3px rgba(0, 27, 77, 0.08);
 }
 
 .toast {
@@ -222,15 +274,17 @@
 }
 
 ::selection {
-  @apply bg-primary text-white dark:bg-primary-400;
+  background-color: #D9A441;
+  color: #001B4D;
 }
 
 ::-moz-selection {
-  @apply bg-primary text-white dark:bg-primary-400;
+  background-color: #D9A441;
+  color: #001B4D;
 }
 
 :focus-visible {
-  @apply outline-none ring-2 ring-primary dark:ring-primary-400 ring-offset-2 dark:ring-offset-gray-900;
+  @apply outline-none ring-2 ring-navy ring-offset-2;
 }
 
 a {
@@ -334,7 +388,7 @@ input[type="radio"]:checked {
 }
 
 .badge-success {
-  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300;
+  @apply bg-navy/10 text-navy;
 }
 
 .badge-warning {

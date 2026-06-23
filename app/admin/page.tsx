@@ -136,30 +136,40 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-text-light dark:text-gray-400">Welcome to Promise Land India Education Admin Panel</p>
+    <div className="space-y-8">
+      {/* Welcome Banner */}
+      <div className="bg-gradient-to-r from-[#001b4d] to-[#003399] rounded-3xl p-8 text-white relative overflow-hidden shadow-lg">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#d9a441] rounded-full opacity-10 -translate-y-1/3 translate-x-1/3 blur-2xl"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full opacity-5 translate-y-1/2 -translate-x-1/2 blur-xl"></div>
+        <div className="relative z-10">
+          <span className="bg-[#d9a441] text-[#001b4d] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+            Admin Console
+          </span>
+          <h1 className="text-3xl md:text-4xl font-extrabold mt-3 font-heading tracking-tight">Promise India Education Consultancy</h1>
+          <p className="text-gray-200 mt-2 max-w-xl text-sm md:text-base">
+            Manage consultations, update college profiles, track applications and secure admissions.
+          </p>
+        </div>
       </div>
 
-      {/* Main Stats */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Main Stats Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title}>
-              <CardBody>
+            <Card key={stat.title} className="rounded-2xl hover:shadow-lg transition-all duration-300 border-t-4 border-[#d9a441] hover:-translate-y-1 group">
+              <CardBody className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-text-light dark:text-gray-400 mb-1">{stat.title}</p>
-                    <p className="text-3xl font-bold">{stat.value}</p>
+                    <p className="text-xs text-text-light dark:text-gray-400 font-semibold uppercase tracking-wider mb-1">{stat.title}</p>
+                    <p className="text-3xl font-extrabold text-[#001b4d] dark:text-white">{stat.value}</p>
                   </div>
-                  <div className={`${stat.color} p-3 rounded-full`}>
-                    <Icon className="h-8 w-8 text-white" />
+                  <div className="bg-[#001b4d] p-3.5 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                    <Icon className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <Link href={stat.link}>
-                  <Button variant="ghost" size="sm" className="mt-4 w-full">
+                  <Button variant="ghost" size="sm" className="mt-4 w-full text-primary hover:bg-[#001b4d]/5 dark:text-primary-400 dark:hover:bg-primary-950/20 font-bold rounded-xl text-xs py-2">
                     View Details
                   </Button>
                 </Link>
@@ -169,90 +179,92 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      {/* Lead Analytics */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardBody>
-            <h3 className="text-xl font-bold mb-4 flex items-center">
-              <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+      {/* Analytics & Tracking */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Leads by Inquiry Type */}
+        <Card className="rounded-2xl border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] overflow-hidden">
+          <CardBody className="p-6">
+            <h3 className="text-lg font-bold text-[#001b4d] mb-5 flex items-center border-b pb-4">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#d9a441] mr-2"></span>
               Leads by Inquiry Type
             </h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">Apply for Admission</span>
-                <span className="text-lg font-bold text-accent">{stats.inquiryTypes.apply}</span>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Apply for Admission</span>
+                <span className="px-3.5 py-1 bg-[#d9a441]/10 text-[#d9a441] rounded-full text-sm font-extrabold">{stats.inquiryTypes.apply}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">Free Consultation</span>
-                <span className="text-lg font-bold text-primary">{stats.inquiryTypes.consultation}</span>
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Free Consultation</span>
+                <span className="px-3.5 py-1 bg-[#001b4d]/10 text-[#001b4d] rounded-full text-sm font-extrabold">{stats.inquiryTypes.consultation}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">Office Visit</span>
-                <span className="text-lg font-bold text-secondary">{stats.inquiryTypes.visit}</span>
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Office Visit</span>
+                <span className="px-3.5 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-extrabold">{stats.inquiryTypes.visit}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">General Inquiry</span>
-                <span className="text-lg font-bold text-gray-600 dark:text-gray-300">{stats.inquiryTypes.general}</span>
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">General Inquiry</span>
+                <span className="px-3.5 py-1 bg-gray-200 text-gray-600 rounded-full text-sm font-extrabold">{stats.inquiryTypes.general}</span>
               </div>
             </div>
           </CardBody>
         </Card>
 
-        <Card>
-          <CardBody>
-            <h3 className="text-xl font-bold mb-4 flex items-center">
-              <TrendingUp className="h-5 w-5 mr-2 text-secondary" />
+        {/* Lead Source Tracking */}
+        <Card className="rounded-2xl border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] overflow-hidden">
+          <CardBody className="p-6">
+            <h3 className="text-lg font-bold text-[#001b4d] mb-5 flex items-center border-b pb-4">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#001b4d] mr-2"></span>
               Lead Source Tracking
             </h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">Homepage</span>
-                <span className="text-lg font-bold text-primary">{stats.sources.homepage}</span>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Homepage Banner</span>
+                <span className="px-3.5 py-1 bg-[#001b4d]/10 text-[#001b4d] rounded-full text-sm font-extrabold">{stats.sources.homepage}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">College Detail Page</span>
-                <span className="text-lg font-bold text-secondary">{stats.sources.college_detail}</span>
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">College Details Page</span>
+                <span className="px-3.5 py-1 bg-[#d9a441]/10 text-[#d9a441] rounded-full text-sm font-extrabold">{stats.sources.college_detail}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">Direct Contact</span>
-                <span className="text-lg font-bold text-gray-600 dark:text-gray-300">{stats.sources.direct}</span>
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Direct Contact / WhatsApp</span>
+                <span className="px-3.5 py-1 bg-gray-200 text-gray-700 rounded-full text-sm font-extrabold">{stats.sources.direct}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-background dark:bg-gray-700 rounded-lg">
-                <span className="text-sm font-medium">Mobile CTA</span>
-                <span className="text-lg font-bold text-accent">{stats.sources.mobile_cta}</span>
+              <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-[#001b4d]/5 dark:bg-gray-800 rounded-2xl transition-colors">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Mobile Floating CTA</span>
+                <span className="px-3.5 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-extrabold">{stats.sources.mobile_cta}</span>
               </div>
             </div>
           </CardBody>
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card>
-          <CardBody>
-            <h3 className="text-xl font-bold mb-4">Quick Actions</h3>
-            <div className="flex flex-col gap-3">
-              <Link href="/admin/colleges/new">
-                <Button variant="primary" className="w-full">
+      {/* Quick Actions & System Info */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <Card className="rounded-2xl border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] overflow-hidden">
+          <CardBody className="p-6">
+            <h3 className="text-lg font-bold text-[#001b4d] mb-5 border-b pb-4">Quick Operations</h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Link href="/admin/colleges/new" className="w-full">
+                <Button className="w-full bg-[#001b4d] hover:bg-[#003399] text-white font-bold py-3.5 rounded-xl shadow-md transition-all text-sm flex justify-center items-center">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add New College
+                  Add College
                 </Button>
               </Link>
-              <Link href="/admin/consultations">
-                <Button variant="secondary" className="w-full">
-                  View Consultation Requests
+              <Link href="/admin/consultations" className="w-full">
+                <Button className="w-full bg-[#d9a441] hover:bg-[#c4922e] text-[#001b4d] font-bold py-3.5 rounded-xl shadow-md transition-all text-sm flex justify-center items-center">
+                  View Leads
                   {unreadCount > 0 && (
-                    <span className="ml-2 bg-white text-secondary px-2 py-0.5 rounded-full text-xs font-bold">
+                    <span className="ml-2 bg-[#001b4d] text-white px-2 py-0.5 rounded-full text-xs font-bold">
                       {unreadCount}
                     </span>
                   )}
                 </Button>
               </Link>
               {currentAdmin?.role === 'super_admin' && (
-                <Link href="/admin/settings/admins">
-                  <Button variant="outline" className="w-full">
+                <Link href="/admin/settings/admins" className="w-full sm:col-span-2">
+                  <Button className="w-full border-2 border-gray-200 hover:border-[#001b4d] text-gray-700 hover:text-[#001b4d] font-bold py-3.5 rounded-xl transition-all text-sm flex justify-center items-center">
                     <Shield className="mr-2 h-4 w-4" />
-                    Manage Admins
+                    Manage Administrators
                   </Button>
                 </Link>
               )}
@@ -260,31 +272,31 @@ export default function AdminDashboardPage() {
           </CardBody>
         </Card>
 
-        <Card>
-          <CardBody>
-            <h3 className="text-xl font-bold mb-4">System Information</h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-text-light dark:text-gray-400">Version:</span>
-                <span className="font-semibold">2.0.0</span>
+        <Card className="rounded-2xl border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] overflow-hidden">
+          <CardBody className="p-6">
+            <h3 className="text-lg font-bold text-[#001b4d] mb-5 border-b pb-4">Performance Insights</h3>
+            <div className="space-y-4 text-sm font-medium">
+              <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+                <span className="text-gray-500">Admissions Portal Version:</span>
+                <span className="font-bold text-gray-800">2.1.0</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-text-light dark:text-gray-400">Featured Colleges:</span>
-                <span className="font-semibold">{stats.featuredColleges}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+                <span className="text-gray-500">Featured Institutions:</span>
+                <span className="font-bold text-[#d9a441]">{stats.featuredColleges}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-text-light dark:text-gray-400">Application Rate:</span>
-                <span className="font-semibold text-accent">
+              <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+                <span className="text-gray-500">Lead Conversion Rate:</span>
+                <span className="font-bold text-[#001b4d]">
                   {stats.totalConsultations > 0
-                    ? Math.round((stats.inquiryTypes.apply / stats.totalConsultations) * 100)
+                    ? Math.round(((stats.totalConsultations - stats.pendingConsultations) / stats.totalConsultations) * 100)
                     : 0}%
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-text-light dark:text-gray-400">Conversion Rate:</span>
-                <span className="font-semibold text-secondary">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Core Application Rate:</span>
+                <span className="font-bold text-[#001b4d]">
                   {stats.totalConsultations > 0
-                    ? Math.round(((stats.totalConsultations - stats.pendingConsultations) / stats.totalConsultations) * 100)
+                    ? Math.round((stats.inquiryTypes.apply / stats.totalConsultations) * 100)
                     : 0}%
                 </span>
               </div>

@@ -133,27 +133,26 @@ export default function SettingsPage() {
 
         <Button
           type="submit"
-          variant="primary"
-          size="lg"
           disabled={saving}
           form="settings-form"
+          className="bg-[#001b4d] hover:bg-[#003399] text-white font-bold py-3 px-6 rounded-xl transition-all shadow-sm text-sm flex items-center justify-center"
         >
           {saving ? (
             <>
-              <div className="animate-spin h-4 w-4 border-b-2 border-white rounded-full mr-2"></div>
+              <span className="animate-spin h-4 w-4 border-b-2 border-white rounded-full mr-2"></span>
               Saving...
             </>
           ) : (
             <>
-              <Save className="mr-2 h-5 w-5" />
-              Save
+              <Save className="mr-2 h-4 w-4" />
+              Save Settings
             </>
           )}
         </Button>
       </div>
 
       {success && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+        <div className="mb-6 p-4 bg-navy/5 border border-navy/20 rounded-xl text-navy text-sm font-semibold">
           ✓ Settings saved successfully!
         </div>
       )}
@@ -171,7 +170,7 @@ export default function SettingsPage() {
           <AccordionCard
             title="Contact Information"
             description="Update your contact details"
-            icon={<Contact className="h-5 w-5 text-primary" />}
+            icon={<Contact className="h-5 w-5 text-[#001b4d]" />}
             open={contactOpen}
             setOpen={setContactOpen}
           >
@@ -195,7 +194,7 @@ export default function SettingsPage() {
 
             <textarea
               rows={3}
-              className="textarea mt-4"
+              className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#001b4d] focus:border-transparent transition-all mt-4"
               placeholder="Office address"
               value={formData.address}
               onChange={(e) =>
@@ -207,12 +206,12 @@ export default function SettingsPage() {
           <AccordionCard
             title="Announcement Bar"
             description="Display announcement on website"
-            icon={<Megaphone className="h-5 w-5 text-primary" />}
+            icon={<Megaphone className="h-5 w-5 text-[#001b4d]" />}
             open={announcementOpen}
             setOpen={setAnnouncementOpen}
           >
             <div className="space-y-4">
-              <label className="flex items-center space-x-2">
+              <label className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.announcementEnabled}
@@ -222,13 +221,14 @@ export default function SettingsPage() {
                       announcementEnabled: e.target.checked,
                     })
                   }
+                  className="h-4 w-4 text-[#001b4d] focus:ring-[#001b4d] border-gray-300 rounded"
                 />
-                <span>Enable Announcement</span>
+                <span className="text-sm font-bold text-gray-700">Enable Announcement</span>
               </label>
 
               <textarea
                 rows={3}
-                className="textarea"
+                className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#001b4d] focus:border-transparent transition-all"
                 placeholder="Announcement message..."
                 value={formData.announcementText}
                 onChange={(e) =>
@@ -244,7 +244,7 @@ export default function SettingsPage() {
           <AccordionCard
             title="Social Media & Messaging Links"
             description="Add social profiles & WhatsApp"
-            icon={<Share2 className="h-5 w-5 text-primary" />}
+            icon={<Share2 className="h-5 w-5 text-[#001b4d]" />}
             open={socialOpen}
             setOpen={setSocialOpen}
           >
@@ -353,8 +353,8 @@ export default function SettingsPage() {
 
 /* ===============================
    REUSABLE COMPONENTS
-================================ */
-
+ ================================ */
+ 
 function AccordionCard({
   title,
   description,
@@ -364,35 +364,35 @@ function AccordionCard({
   children,
 }: any) {
   return (
-    <Card className="group border border-gray-200/70 hover:border-primary/40 hover:shadow-md transition-all duration-200 rounded-2xl overflow-hidden">
+    <Card className="group border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] hover:shadow-md transition-all duration-200 rounded-2xl overflow-hidden bg-white">
       <CardBody className="p-0">
         <div
           onClick={() => setOpen(!open)}
-          className="flex items-center justify-between px-6 py-5 cursor-pointer bg-white hover:bg-gray-50 transition"
+          className="flex items-center justify-between px-6 py-5 cursor-pointer bg-white hover:bg-gray-50/50 transition-colors"
         >
           <div className="flex items-center space-x-4">
-            <div className="bg-primary/10 group-hover:bg-primary/20 transition p-3 rounded-xl">
+            <div className="bg-[#001b4d]/5 group-hover:bg-[#001b4d]/10 text-[#001b4d] transition-colors p-3.5 rounded-xl">
               {icon}
             </div>
             <div>
-              <h2 className="text-lg font-semibold">{title}</h2>
-              <p className="text-sm text-gray-500">{description}</p>
+              <h2 className="text-base font-extrabold text-[#001b4d]">{title}</h2>
+              <p className="text-xs font-semibold text-gray-400 mt-0.5">{description}</p>
             </div>
           </div>
-
+ 
           <ChevronDown
-            className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180 text-primary' : ''
+            className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180 text-[#001b4d]' : ''
               }`}
           />
         </div>
-
+ 
         <div
           className={`transition-all duration-300 ${open
             ? 'max-h-[1000px] opacity-100'
             : 'max-h-0 opacity-0 overflow-hidden'
             }`}
         >
-          <div className="px-6 pb-6 pt-2 border-t border-gray-100 bg-gray-50/40">
+          <div className="px-6 pb-6 pt-2 border-t border-gray-100 bg-gray-50/20">
             {children}
           </div>
         </div>
@@ -400,24 +400,24 @@ function AccordionCard({
     </Card>
   );
 }
-
+ 
 function NavCard({ title, description, icon }: any) {
   return (
-    <Card className="group hover:shadow-lg transition-all duration-200 cursor-pointer border hover:border-primary/40 rounded-2xl">
-      <CardBody>
+    <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] rounded-2xl bg-white">
+      <CardBody className="p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="bg-primary/10 group-hover:bg-primary/20 transition p-3 rounded-xl">
+            <div className="bg-[#001b4d]/5 group-hover:bg-[#001b4d]/10 text-[#001b4d] transition-colors p-3.5 rounded-xl">
               {icon}
             </div>
             <div>
-              <h3 className="text-lg font-semibold group-hover:text-primary transition">
+              <h3 className="text-base font-extrabold text-[#001b4d] group-hover:text-[#003399] transition-colors">
                 {title}
               </h3>
-              <p className="text-sm text-gray-500">{description}</p>
+              <p className="text-xs font-semibold text-gray-400 mt-0.5">{description}</p>
             </div>
           </div>
-          <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-primary transition-transform group-hover:translate-x-1" />
+          <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-[#001b4d] transition-transform group-hover:translate-x-1" />
         </div>
       </CardBody>
     </Card>

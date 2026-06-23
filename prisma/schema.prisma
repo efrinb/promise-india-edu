@@ -59,6 +59,14 @@ model College {
   videoUrls        String[] @default([])  // NEW - Video URLs
   googleFormUrl    String?
   status           String   @default("draft")
+  
+  // Dynamic Metadata Fields
+  affiliation      String?
+  approval         String?
+  established      String?
+  campusSize       String?
+  facilities       String[] @default([])
+
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -129,5 +137,72 @@ model Banner {
   @@index([active])
   @@index([startDate])
   @@index([endDate])
+  @@index([order])
+}
+
+model SiteStatistic {
+  id          String   @id @default(cuid())
+  value       String
+  label       String
+  description String?
+  icon        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model CourseProgram {
+  id          String   @id @default(cuid())
+  title       String
+  duration    String
+  description String   @db.Text
+  bullets     Json     // Array of strings
+  slug        String   @unique
+  icon        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model AdmissionStep {
+  id          String   @id @default(cuid())
+  stepNumber  Int
+  title       String
+  description String   @db.Text
+  icon        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([stepNumber])
+}
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  name        String
+  role        String
+  description String   @db.Text
+  image       String
+  facebook    String?
+  instagram   String?
+  linkedin    String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String   @db.Text
+  answer    String   @db.Text
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([order])
 }

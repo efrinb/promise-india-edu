@@ -93,15 +93,15 @@ export default function AdminCollegesPage() {
       </div>
 
       {/* Search */}
-      <Card className="p-4 mb-6">
+      <Card className="rounded-2xl border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] bg-white p-4 mb-8">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-text-lighter dark:text-gray-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <Input
             type="text"
             placeholder="Search colleges by name or location..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
+            className="pl-12 w-full bg-gray-50 border border-gray-100 rounded-xl py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#001b4d] focus:border-transparent transition-all"
           />
         </div>
       </Card>
@@ -127,9 +127,9 @@ export default function AdminCollegesPage() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((college) => (
-            <Card key={college.id} className="overflow-hidden">
+            <Card key={college.id} className="overflow-hidden rounded-2xl border-none shadow-[0_10px_35px_rgba(0,0,0,0.03)] hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               {/* Image */}
-              <div className="relative aspect-video">
+              <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
                 {college.thumbnailUrl ? (
                   <Image
                     src={college.thumbnailUrl}
@@ -138,16 +138,16 @@ export default function AdminCollegesPage() {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                    <GraduationCap className="h-20 w-20 text-white/50" />
+                  <div className="w-full h-full bg-gradient-to-br from-[#001b4d] to-[#003399] flex items-center justify-center">
+                    <GraduationCap className="h-16 w-16 text-white/40" />
                   </div>
                 )}
 
                 {/* Badges */}
-                <div className="absolute top-2 left-2 flex flex-col gap-2">
+                <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                   {college.featured && (
-                    <span className="bg-accent text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
-                      <Star className="h-3 w-3" />
+                    <span className="bg-[#d9a441] text-[#001b4d] px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-sm uppercase tracking-wider">
+                      <Star className="h-3 w-3 fill-current" />
                       Featured
                     </span>
                   )}
@@ -155,9 +155,9 @@ export default function AdminCollegesPage() {
                 </div>
 
                 {/* Status Badge */}
-                <div className="absolute top-2 right-2">
-                  <span className={`px-2 py-1 rounded text-xs font-bold ${college.status === 'published'
-                    ? 'bg-secondary text-white'
+                <div className="absolute top-3 right-3">
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider shadow-sm ${college.status === 'published'
+                    ? 'bg-[#0059ff] text-white'
                     : 'bg-gray-500 text-white'
                     }`}>
                     {college.status === 'published' ? 'Published' : 'Draft'}
@@ -166,33 +166,37 @@ export default function AdminCollegesPage() {
               </div>
 
               {/* Content */}
-              <CardBody>
-                <h3 className="font-bold text-lg mb-2 line-clamp-1">{college.name}</h3>
-                <p className="text-sm text-text-light dark:text-gray-400 mb-1">{college.location}</p>
-                <p className="text-sm text-text-light dark:text-gray-400 mb-3 line-clamp-2">
+              <CardBody className="p-5">
+                <h3 className="font-extrabold text-lg text-[#001b4d] dark:text-white mb-1.5 line-clamp-1 leading-snug">{college.name}</h3>
+                <p className="text-xs font-semibold text-gray-400 mb-2 flex items-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#d9a441] mr-1.5"></span>
+                  {college.location}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed h-10">
                   {college.shortDescription}
                 </p>
 
-                <div className="flex items-center justify-between mb-4 pb-4 border-b dark:border-gray-700">
-                  <span className="text-xs text-text-light dark:text-gray-400">Total Fee:</span>
-                  <span className="font-bold text-primary dark:text-primary-400">
+                <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100 dark:border-gray-700">
+                  {/* <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Fee (4 Years)</span>
+                  <span className="font-extrabold text-[#001b4d] dark:text-primary-400 text-lg">
                     {formatCurrency((college.fees as any).total)}
-                  </span>
+                  </span> */}
                 </div>
 
                 <div className="flex gap-2">
                   <Link href={`/admin/colleges/${college.id}/edit`} className="flex-1">
-                    <Button variant="primary" size="sm" className="w-full">
-                      <Pencil className="mr-2 h-4 w-4" />
-                      Edit
+                    <Button variant="primary" size="sm" className="w-full bg-[#001b4d] hover:bg-[#003399] text-white font-bold py-2.5 rounded-xl transition-all text-xs flex justify-center items-center shadow-sm">
+                      <Pencil className="mr-2 h-3.5 w-3.5" />
+                      Edit Profile
                     </Button>
                   </Link>
                   <Button
                     variant="outline"
                     size="sm"
+                    className="border border-gray-200 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl px-3 transition-colors"
                     onClick={() => setDeleteModal({ show: true, college })}
                   >
-                    <Trash2 className="h-4 w-4 text-accent" />
+                    <Trash2 className="h-4 w-4 text-red-500" />
                   </Button>
                 </div>
               </CardBody>

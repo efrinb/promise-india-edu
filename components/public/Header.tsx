@@ -2,79 +2,126 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, GraduationCap } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Menu, X, Phone } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
-export function Header() {
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/colleges', label: 'Colleges' },
+  { href: '/admission-process', label: 'Admission Process' },
+  { href: '/about', label: 'About Us' },
+  { href: '/contact', label: 'Contact Us' },
+];
+
+interface HeaderProps {
+  phone?: string | null;
+}
+
+export function Header({ phone = '+91 98765 43210' }: HeaderProps) {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '/colleges', label: 'Colleges' },
-    { href: '/abroad-education', label: 'Abroad Education' },
-    { href: '/about', label: 'About Us' },
-    { href: '/contact', label: 'Contact' },
-  ];
-
   return (
-    <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm transition-colors">
-      <nav className="container-custom">
+    <header className="sticky top-0 z-50 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.08)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center space-x-2">
-            <GraduationCap className="h-8 w-8 text-primary dark:text-primary-400" />
-            <span className="text-xl font-bold text-primary dark:text-primary-400">
-              Promise Land India Education Consultancy
+
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <span className="text-lg font-bold text-[#001b4d] leading-tight" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              Promise India<br />
+              <span className="text-xs font-semibold text-[#d9a441] tracking-wide">Education Consultancy</span>
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex md:hidden items-center space-x-2">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-700 dark:text-gray-300"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t dark:border-gray-700">
-            <div className="flex flex-col space-y-4">
-              {navItems.map((item) => (
+          {/* Desktop nav */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+              return (
                 <Link
-                  key={item.href}
+                  key={item.label}
                   href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors px-2 py-1"
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'text-[#001b4d] font-bold border-b-2 border-[#d9a441] rounded-none pb-[6px]'
+                      : 'text-gray-600 hover:text-[#001b4d]'
+                  }`}
                 >
                   {item.label}
                 </Link>
-              ))}
-              <Link href="/contact?type=consultation&source=header" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="danger" className="w-full">
-                  Get Started
-                </Button>
-              </Link>
+              );
+            })}
+          </nav>
+
+          {/* Right side: phone + CTA */}
+          <div className="hidden lg:flex items-center gap-4">
+            <a
+              href={`tel:${phone?.replace(/\s/g, '')}`}
+              className="flex items-center gap-2 text-sm font-semibold text-[#001b4d] hover:text-[#d9a441] transition-colors"
+            >
+              <Phone className="h-4 w-4" />
+              {phone}
+            </a>
+            <Link
+              href="/contact?type=consultation&source=navbar"
+              className="bg-[#d9a441] text-[#001b4d] px-5 py-2 rounded-lg font-bold text-sm hover:bg-[#c4922e] transition-colors shadow-sm"
+            >
+              Apply Now
+            </Link>
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 text-[#001b4d] hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden py-4 border-t border-gray-100">
+            <div className="flex flex-col space-y-1">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-[#f0f3ff] text-[#001b4d] font-bold'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-[#001b4d]'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <div className="pt-3 border-t border-gray-100 space-y-2">
+                <a
+                  href={`tel:${phone?.replace(/\s/g, '')}`}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-[#001b4d]"
+                >
+                  <Phone className="h-4 w-4" />
+                  {phone}
+                </a>
+                <Link
+                  href="/contact?type=consultation&source=navbar"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block w-full text-center bg-[#d9a441] text-[#001b4d] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#c4922e] transition-colors"
+                >
+                  Apply Now
+                </Link>
+              </div>
             </div>
           </div>
         )}
-      </nav>
+      </div>
     </header>
   );
 }

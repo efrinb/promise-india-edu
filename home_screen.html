@@ -1,0 +1,520 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>PromiseLand India Education | Premier Nursing Admission Guidance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#848688",
+                    "surface-dim": "#cfdaf2",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#ffdeaa",
+                    "on-secondary-fixed": "#271900",
+                    "background": "#f9f9ff",
+                    "on-surface-variant": "#44464f",
+                    "secondary-fixed-dim": "#f5bd58",
+                    "inverse-surface": "#263143",
+                    "surface-container": "#e7eeff",
+                    "surface-bright": "#f9f9ff",
+                    "surface-variant": "#d8e3fb",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#dae2ff",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#ecf1ff",
+                    "tertiary-fixed-dim": "#c5c7c8",
+                    "secondary": "#7d5700",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "on-secondary-container": "#755100",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#5f4100",
+                    "on-primary-fixed-variant": "#304578",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#7185bc",
+                    "surface-container-low": "#f0f3ff",
+                    "inverse-primary": "#b2c5ff",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "surface-container-high": "#dee8ff",
+                    "tertiary-container": "#1c1f21",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#040607",
+                    "on-background": "#111c2d",
+                    "primary": "#000417",
+                    "primary-container": "#001b4d",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#001847",
+                    "on-surface": "#111c2d",
+                    "on-tertiary-fixed": "#191c1e",
+                    "outline-variant": "#c5c6d0",
+                    "surface-container-highest": "#d8e3fb",
+                    "surface": "#f9f9ff",
+                    "tertiary-fixed": "#e1e2e4",
+                    "outline": "#757780",
+                    "surface-tint": "#495d91",
+                    "secondary-container": "#ffc55f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-padding-mobile": "48px",
+                    "stack-md": "16px",
+                    "gutter": "24px",
+                    "section-padding-desktop": "80px",
+                    "max-width": "1280px",
+                    "container-margin": "auto",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-xl-mobile": ["Plus Jakarta Sans"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .signature-shadow {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        .navy-overlay {
+            background: linear-gradient(90deg, rgba(0, 4, 23, 0.95) 30%, rgba(0, 4, 23, 0.6) 100%);
+        }
+        .curved-line {
+            border-radius: 100% 0% 100% 0% / 0% 100% 0% 100%;
+        }
+        .partner-scroll {
+            animation: scroll 40s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-surface shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
+<nav class="flex justify-between items-center w-full px-gutter max-w-max-width mx-auto h-20">
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-bold text-primary">Promise India<br>Education Consultancy</span>
+</div>
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="text-secondary border-b-2 border-secondary font-bold pb-1 font-label-md text-label-md" href="#">Home</a>
+<a class="text-on-surface-variant transition-colors duration-300 hover:text-secondary font-label-md text-label-md" href="#">Courses</a>
+<a class="text-on-surface-variant transition-colors duration-300 hover:text-secondary font-label-md text-label-md" href="#">Colleges</a>
+<a class="text-on-surface-variant transition-colors duration-300 hover:text-secondary font-label-md text-label-md" href="#">Admission Process</a>
+<a class="text-on-surface-variant transition-colors duration-300 hover:text-secondary font-label-md text-label-md" href="#">About Us</a>
+<a class="text-on-surface-variant transition-colors duration-300 hover:text-secondary font-label-md text-label-md" href="#">Contact Us</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden lg:block font-label-md text-label-md font-bold text-primary">+91 98765 43210</span>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-2.5 rounded-lg font-bold text-label-md hover:opacity-90 transition-opacity shadow-sm">Apply Now</button>
+</div>
+</nav>
+</header>
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden bg-primary">
+<div class="absolute inset-0 z-0">
+<img alt="Medical students studying" class="w-full h-full object-cover opacity-40" data-alt="A cinematic, wide-angle shot of professional nursing students in pristine white uniforms collaborating in a brightly lit, modern medical simulation laboratory. The atmosphere is academic and high-end, featuring subtle navy and gold color accents throughout the environment. Soft, premium lighting highlights the focus and dedication on the students' faces, creating a sense of institutional prestige and global opportunity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6H_2zur9_Zy2uCohCIgWwB7sFbgo-tkCljznxwaAusRP_52lnj9U-avISqz9YGvSuDsKo_lfa_miI-CCqbJrmjeUi4IxliqO3fnVdtIc3z8qggHNQELXEi3c_8w7jj7XAVBJYQ3Lb955TNNOeGnY6IKjGs-kIMmoekZ2fkPNWtp8lvHnDgmTYAGa2u_CtaFUheqgn5_A5buPmDTdsqWY1mIvxK8lEwxGJwjxLLozJ4JPM3korYmF5VkUqUoOOCl5s9YwI1a-V6rU">
+<div class="absolute inset-0 navy-overlay"></div>
+</div>
+<div class="relative z-10 max-w-max-width mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 gap-stack-lg items-center py-section-padding-desktop">
+<div class="text-on-primary space-y-stack-md">
+<span class="inline-block bg-secondary-container/20 text-secondary-fixed-dim px-3 py-1 rounded-full text-label-md font-bold border border-secondary-fixed-dim/30">
+                    Trusted Admission Experts
+                </span>
+<h1 class="font-headline-xl text-headline-xl md:text-display-lg leading-tight">
+                    Start Your Nursing Career with Expert Admission Guidance
+                </h1>
+<p class="font-body-lg text-body-lg text-surface-variant max-w-xl">
+                    We help students secure admissions in top nursing colleges across India with complete support from counseling to enrollment.
+                </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-on-primary text-primary px-8 py-4 rounded-xl font-bold text-body-md hover:bg-surface-variant transition-all shadow-lg">Apply Now</button>
+<button class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-xl font-bold text-body-md hover:bg-secondary-fixed transition-all shadow-lg">Free Consultation</button>
+</div>
+<div class="pt-8 flex items-center gap-4">
+<div class="flex -space-x-3">
+<img alt="Student" class="w-12 h-12 rounded-full border-2 border-primary" data-alt="Portrait of a diverse and smiling student representing successful admission candidates. The lighting is clean and warm, following the premium corporate visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDew2MYf46QNgQuhT3Ku8AeBi0c0wSQ0zbmVusZQ2MpdT84kQP_EFlhTFHx2CB028UVZB1MX6JSl84CMLfvARwC1cboLdQ0IMyuAcccaCBR11XguSiTrKmFsJNL8NUbw_EZHV63mVx8yZtmfrUCHMp2nv57Pt2ZDEjdzPgjszXCIVT0tu-dFrYmntD2KDniOdlovMM_TlQU07the5XPNnUczY5pDr-F7shZdNNA3hRb3_CRGeD_FNpLwvunqk87tF472tSYUkPu0ZA">
+<img alt="Student" class="w-12 h-12 rounded-full border-2 border-primary" data-alt="Close up portrait of a professional nursing student looking confident and approachable. Minimalist background with high-key lighting for a clean, modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzXq3jAK6XGt2fl-lZNlXNdy5EmUK8wS_2yG1gvBLnixhXGfGyT7CsMozkOCrb6WXhU_OQChuxugrIjhZQF0zMFqnvbjmBvUO2BdvnVUG4tymXI-D0uzh118zMyOJ3YrkFo3Nq3nNCCWJPPbhLcedOJBb29ROpFdli9AhAJiUop0KpU173HJZZ72u4S5Ndh2GTeaiq1ci58PW3PQuh2O86VEjgTeRVQvBEDS2xI6BOOZP77ZgL5f07w7qxJM60KsYVqFVPWtKygtE">
+<img alt="Student" class="w-12 h-12 rounded-full border-2 border-primary" data-alt="A portrait of a male nursing student with a bright, welcoming smile, wearing a clean medical scrub. The shot conveys trust and success in medical education." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClPZUPkR7exMrNW4KEERM-SVQYeQ9GZxR49NKym3XyYjo7MUgf1pN785253bgQllfthRD5zOLrrmYGGUnHc1fPE9OvwdvWuOiPrbULZVZH9FxJZ69StQazCvHEiFSbfVuWufhpju6A00Ssln5WrWQAeVkRop-wcoDABstE7scuCUHA3NW-7X52zf3FvEyhNEH4oq7RLYRuUWvMfr8wpoicVR4_iXM-s2nGAqYZybi650J8jBQfAxvef89EL94bGylVkKNfLcQpqrE">
+</div>
+<p class="font-label-md text-label-md text-surface-variant">
+<span class="text-secondary-fixed-dim font-bold">Trusted by 2500+</span> Students &amp; Parents
+                    </p>
+</div>
+</div>
+<div class="relative hidden md:block">
+<div class="relative z-10 rounded-3xl overflow-hidden signature-shadow border-4 border-on-primary/10">
+<img alt="Nursing Student" class="w-full h-[600px] object-cover" data-alt="A high-quality editorial photograph of a professional nursing student wearing clinical attire, standing in a sophisticated hospital lobby. The composition is clean and focused, with a blurred modern medical facility in the background. The lighting is soft and natural, emphasizing the gold accents in the branding and creating an atmosphere of reliability and institutional excellence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcMd_hdWoui7gCZlmEMyvUVwOxxFgFKkxNNfKt6Nk_X2phEm1yxUtLFUkrWCLp0tJU57HrfawQara699gsjgNTHoWUv-n9eunsrKPdjv0-pii7whonU5zHfZI-Uu2PyPKTGIrZ-3uVU9SE9C3SXaQ7PiZdZxt7yPSn6CtVbxLh_pZu3KuegZLj7nC91OjUNMkTBBf8hiHUfhGyLjgxywZmH7ynPZtPiT0HM9W-iMhJ2BJeh1cWX4O6BwrNqxn3dknsH7KJFlcIcAQ">
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -top-6 -right-6 w-32 h-32 bg-secondary-container rounded-full opacity-20 blur-3xl"></div>
+<div class="absolute -bottom-10 -left-10 bg-on-primary p-6 rounded-2xl signature-shadow flex items-center gap-4 border border-surface-variant">
+<div class="bg-secondary-container/20 p-3 rounded-full">
+<span class="material-symbols-outlined text-secondary text-3xl">verified</span>
+</div>
+<div>
+<p class="text-primary font-bold text-headline-md">12+ Years</p>
+<p class="text-on-surface-variant text-label-md">Of Excellence</p>
+</div>
+</div>
+<svg class="absolute -right-12 top-1/2 -translate-y-1/2 w-24 h-48 text-secondary-fixed-dim opacity-50" viewBox="0 0 100 200">
+<path d="M0 0 C 50 50, 50 150, 0 200" fill="none" stroke="currentColor" stroke-dasharray="8 4" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</section>
+<!-- Statistics Section -->
+<section class="py-section-padding-desktop bg-surface">
+<div class="max-w-max-width mx-auto px-gutter">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="bg-white p-stack-lg rounded-2xl signature-shadow text-center border border-surface-variant hover:-translate-y-1 transition-transform">
+<span class="material-symbols-outlined text-secondary text-4xl mb-2">groups</span>
+<h3 class="text-headline-lg font-headline-lg text-primary">2500+</h3>
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Students Guided</p>
+</div>
+<div class="bg-white p-stack-lg rounded-2xl signature-shadow text-center border border-surface-variant hover:-translate-y-1 transition-transform">
+<span class="material-symbols-outlined text-secondary text-4xl mb-2">apartment</span>
+<h3 class="text-headline-lg font-headline-lg text-primary">100+</h3>
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Partner Colleges</p>
+</div>
+<div class="bg-white p-stack-lg rounded-2xl signature-shadow text-center border border-surface-variant hover:-translate-y-1 transition-transform">
+<span class="material-symbols-outlined text-secondary text-4xl mb-2">history_edu</span>
+<h3 class="text-headline-lg font-headline-lg text-primary">12+ Years</h3>
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Experience</p>
+</div>
+<div class="bg-white p-stack-lg rounded-2xl signature-shadow text-center border border-surface-variant hover:-translate-y-1 transition-transform">
+<span class="material-symbols-outlined text-secondary text-4xl mb-2">thumb_up</span>
+<h3 class="text-headline-lg font-headline-lg text-primary">98%</h3>
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider">Success Rate</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Programs Section -->
+<section class="py-section-padding-desktop bg-background">
+<div class="max-w-max-width mx-auto px-gutter">
+<div class="text-center mb-16">
+<span class="text-secondary font-bold tracking-[0.2em] uppercase text-label-md block mb-2">Future in Nursing</span>
+<h2 class="text-headline-xl font-headline-xl text-primary">Nursing Programs We Offer</h2>
+<div class="h-1 w-24 bg-secondary-container mx-auto mt-4 rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- BSc Nursing -->
+<div class="group bg-white p-10 rounded-3xl signature-shadow border border-surface-variant hover:border-secondary/30 transition-all flex flex-col h-full">
+<div class="w-16 h-16 bg-surface-container rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl">school</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-primary mb-4">BSc Nursing</h3>
+<p class="text-on-surface-variant mb-8 flex-grow">A 4-year undergraduate program focusing on clinical nursing skills and healthcare management.</p>
+<a class="flex items-center gap-2 text-secondary font-bold hover:gap-4 transition-all" href="#">
+                        Learn More <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<!-- GNM -->
+<div class="group bg-white p-10 rounded-3xl signature-shadow border border-surface-variant hover:border-secondary/30 transition-all flex flex-col h-full">
+<div class="w-16 h-16 bg-surface-container rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl">medical_services</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-primary mb-4">GNM</h3>
+<p class="text-on-surface-variant mb-8 flex-grow">General Nursing and Midwifery program for aspiring healthcare workers in diverse clinical settings.</p>
+<a class="flex items-center gap-2 text-secondary font-bold hover:gap-4 transition-all" href="#">
+                        Learn More <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<!-- Post Basic BSc -->
+<div class="group bg-white p-10 rounded-3xl signature-shadow border border-surface-variant hover:border-secondary/30 transition-all flex flex-col h-full">
+<div class="w-16 h-16 bg-surface-container rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl">upgrade</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-primary mb-4">Post Basic BSc</h3>
+<p class="text-on-surface-variant mb-8 flex-grow">Designed for GNM diploma holders to upgrade their qualification to a bachelor's degree.</p>
+<a class="flex items-center gap-2 text-secondary font-bold hover:gap-4 transition-all" href="#">
+                        Learn More <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<!-- MSc Nursing -->
+<div class="group bg-white p-10 rounded-3xl signature-shadow border border-surface-variant hover:border-secondary/30 transition-all flex flex-col h-full">
+<div class="w-16 h-16 bg-surface-container rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl">psychology</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-primary mb-4">MSc Nursing</h3>
+<p class="text-on-surface-variant mb-8 flex-grow">Advanced postgraduate degree specializing in specific areas of nursing and clinical research.</p>
+<a class="flex items-center gap-2 text-secondary font-bold hover:gap-4 transition-all" href="#">
+                        Learn More <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<!-- International Programs -->
+<div class="group bg-white p-10 rounded-3xl signature-shadow border border-surface-variant hover:border-secondary/30 transition-all flex flex-col h-full lg:col-span-2">
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="w-20 h-20 bg-surface-container rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-primary text-4xl">public</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-headline-md font-headline-md text-primary mb-2">International Nursing Programs</h3>
+<p class="text-on-surface-variant mb-4">Global nursing education and job placement opportunities in UK, Canada, and Australia.</p>
+<a class="flex items-center gap-2 text-secondary font-bold hover:gap-4 transition-all" href="#">
+                                Explore Global Careers <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Admission Process -->
+<section class="py-section-padding-desktop bg-surface overflow-hidden">
+<div class="max-w-max-width mx-auto px-gutter relative">
+<div class="text-center mb-16">
+<h2 class="text-headline-xl font-headline-xl text-primary">Simplified Admission Process</h2>
+<p class="text-on-surface-variant mt-4">Your journey to a nursing degree in four easy steps</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+<!-- Connector Line (Desktop) -->
+<div class="hidden md:block absolute top-1/4 left-0 w-full h-0.5 bg-secondary-fixed-dim/30 -z-10"></div>
+<!-- Step 1 -->
+<div class="relative text-center group">
+<div class="w-20 h-20 bg-white rounded-full signature-shadow flex items-center justify-center mx-auto mb-6 border-4 border-surface group-hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl">chat</span>
+</div>
+<h4 class="text-headline-md font-headline-md text-primary mb-2">Counseling</h4>
+<p class="text-on-surface-variant text-body-md">Personalized guidance to understand your goals.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative text-center group">
+<div class="w-20 h-20 bg-white rounded-full signature-shadow flex items-center justify-center mx-auto mb-6 border-4 border-surface group-hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl">format_list_bulleted</span>
+</div>
+<h4 class="text-headline-md font-headline-md text-primary mb-2">Course Selection</h4>
+<p class="text-on-surface-variant text-body-md">Choosing the right program and college for you.</p>
+</div>
+<!-- Step 3 -->
+<div class="relative text-center group">
+<div class="w-20 h-20 bg-white rounded-full signature-shadow flex items-center justify-center mx-auto mb-6 border-4 border-surface group-hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl">description</span>
+</div>
+<h4 class="text-headline-md font-headline-md text-primary mb-2">Documentation</h4>
+<p class="text-on-surface-variant text-body-md">Seamless management of all admission paperwork.</p>
+</div>
+<!-- Step 4 -->
+<div class="relative text-center group">
+<div class="w-20 h-20 bg-white rounded-full signature-shadow flex items-center justify-center mx-auto mb-6 border-4 border-surface group-hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl">task_alt</span>
+</div>
+<h4 class="text-headline-md font-headline-md text-primary mb-2">Confirmation</h4>
+<p class="text-on-surface-variant text-body-md">Official admission letter from your dream college.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Partner Colleges Carousel -->
+<section class="py-16 bg-white overflow-hidden border-y border-surface-variant">
+<div class="max-w-max-width mx-auto px-gutter mb-10 text-center">
+<p class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">Associated with Top Institutions</p>
+</div>
+<div class="flex overflow-hidden relative">
+<div class="flex partner-scroll whitespace-nowrap gap-20">
+<!-- Logos -->
+<div class="flex items-center gap-20">
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">AIIMS</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">PGIMER</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">CMC VELLORE</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">AFMC</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">JIPMER</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">ST. JOHNS</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">KASTURBA</span>
+</div>
+<!-- Duplicate for seamless scroll -->
+<div class="flex items-center gap-20">
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">AIIMS</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">PGIMER</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">CMC VELLORE</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">AFMC</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">JIPMER</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">ST. JOHNS</span>
+<span class="text-headline-md font-bold text-surface-dim/80 grayscale hover:grayscale-0 transition-all">KASTURBA</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-section-padding-desktop bg-background">
+<div class="max-w-max-width mx-auto px-gutter">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+<div>
+<h2 class="text-headline-xl font-headline-xl text-primary">Student Stories</h2>
+<p class="text-on-surface-variant mt-2 max-w-lg">Hear from our students who successfully started their professional journey with us.</p>
+</div>
+<button class="border-2 border-primary text-primary px-6 py-2 rounded-lg font-bold hover:bg-primary hover:text-white transition-all">View All Success Stories</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Testimonial 1 -->
+<div class="bg-white p-8 rounded-3xl signature-shadow border border-surface-variant flex flex-col">
+<div class="flex items-center gap-4 mb-6">
+<img alt="Student" class="w-16 h-16 rounded-full object-cover" data-alt="Portrait of a young female nursing student, smiling warmly with a modern clinical background. The style is clean, corporate, and focuses on professional success in a high-key lighting setup with soft color grading." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpwBisKIjmfVCzcHatxM9cG46uCl-cRPMwBkyefaURdDCIGZHzctHAeRg3E-0pQ-shvQbA7YrqJG0ccUYfznKKk1OUUsdTWvNyBvTt5YAuFU9nf-QrpYAeYuhizN-dlTTasH2d8teUhmia1UsWTVkHpEGmO2d7ZUCR8Iz7OQ0lCaPsaXkiEy9FSBk991zsCw5Srk1f3Sag84EYpoFfuXMCsBfHi3A60_HS2w703qed04f4gHsEiggOFV7Nesox1Sz4TRRV0rYIwbI">
+<div>
+<p class="font-bold text-primary text-body-lg">Priya Sharma</p>
+<p class="text-on-surface-variant text-label-md">BSc Nursing, 2023</p>
+</div>
+</div>
+<div class="flex text-secondary-container mb-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+<p class="text-on-surface-variant italic leading-relaxed">"The counseling I received at PromiseLand was life-changing. They helped me choose the right college that fit my budget and career goals perfectly."</p>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white p-8 rounded-3xl signature-shadow border border-secondary/20 flex flex-col relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-5">
+<span class="material-symbols-outlined text-8xl">format_quote</span>
+</div>
+<div class="flex items-center gap-4 mb-6">
+<img alt="Student" class="w-16 h-16 rounded-full object-cover" data-alt="Professional headshot of a male nursing graduate, looking confident and ready for his career. The photo uses clean, studio lighting with a neutral gray background to highlight his professionalism and successful educational outcome." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMV6ZvTIAAuafZTg8iZEInXJpkwwnIgmu2luZ9Eq9GdW6ujUwqvZeg-6HEZO3N5pqmwudPg7VK_Ti8_g6SOcu91xP4JHyfrDd4n7d28oc6uJamgYlhH_zEw5Bv2ciBVdngOWaVljh6_b_F1hVEA1TOfRCd4om9jVjyZwA84cpM986axps4TdvRC678FYgZXuGLAjkmxz-XGsilON5YbrdmNBYEBi1khe98g3SWNoyC8-TJwyO34RORIf9u6WieK1YV2CqZzL9dFoY">
+<div>
+<p class="font-bold text-primary text-body-lg">Rahul Verma</p>
+<p class="text-on-surface-variant text-label-md">GNM, 2022</p>
+</div>
+</div>
+<div class="flex text-secondary-container mb-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+<p class="text-on-surface-variant italic leading-relaxed">"Their documentation support was seamless. I didn't have to worry about anything. Highly recommended for any nursing aspirant!"</p>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-white p-8 rounded-3xl signature-shadow border border-surface-variant flex flex-col">
+<div class="flex items-center gap-4 mb-6">
+<img alt="Student" class="w-16 h-16 rounded-full object-cover" data-alt="Close up portrait of a smiling female nurse who just completed her MSc, expressing gratitude and success. Minimalist lighting with a slight golden glow, maintaining the corporate modern aesthetic of PromiseLand India Education." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi8YSd9lWpzqb1-LpfT0bgpop37mniyI1CocAtkKGZsnlPFtyJpU3_Dp3jCBlU4TiGlGcj8Nn590OndmDNA5OUFkPaSAOCSaQwKCRWq0un9SNalTRMxlxeHPTLKzwXOrAzZV9MtvV-SvfSTKV-W8u2Tna4fTsVElgcmqglL3jyEnDvqDO6UEN9P2sWF1knIuSRPSWXAywzm16I5fBOMwdKocr8I46h1MyoxogPfKU44UziKPEoUXU3cu5_ldCN0QyqLe9_7bMPDk4">
+<div>
+<p class="font-bold text-primary text-body-lg">Anjali Nair</p>
+<p class="text-on-surface-variant text-label-md">MSc Nursing, 2023</p>
+</div>
+</div>
+<div class="flex text-secondary-container mb-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+<p class="text-on-surface-variant italic leading-relaxed">"The scholarship guidance helped me secure my post-graduation without a massive financial burden. They truly care for their students."</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="py-section-padding-desktop">
+<div class="max-w-max-width mx-auto px-gutter">
+<div class="bg-primary rounded-[40px] p-12 md:p-20 relative overflow-hidden text-center text-on-primary">
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary-container rounded-full opacity-10 -translate-y-1/2 translate-x-1/2"></div>
+<div class="absolute bottom-0 left-0 w-48 h-48 bg-on-primary rounded-full opacity-5 translate-y-1/2 -translate-x-1/2"></div>
+<h2 class="text-headline-xl font-headline-xl mb-6 relative z-10">Ready to Begin Your Nursing Career?</h2>
+<p class="text-body-lg text-surface-variant mb-10 max-w-2xl mx-auto relative z-10">Get expert guidance today and secure your seat in India's leading nursing institutions.</p>
+<div class="flex flex-wrap justify-center gap-6 relative z-10">
+<button class="bg-secondary-container text-on-secondary-container px-10 py-5 rounded-2xl font-bold text-headline-md hover:scale-105 transition-transform shadow-xl">Book Free Consultation</button>
+<button class="bg-on-primary/10 backdrop-blur-sm text-on-primary border border-on-primary/20 px-10 py-5 rounded-2xl font-bold text-headline-md hover:bg-on-primary/20 transition-all">Contact Us</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-primary pt-20 pb-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-stack-lg w-full px-gutter max-w-max-width mx-auto mb-20">
+<div class="col-span-1 md:col-span-1">
+<p class="text-headline-md font-headline-md font-bold text-on-primary mb-6">PromiseLand India</p>
+<p class="text-surface-variant opacity-80 mb-6">Empowering the next generation of healthcare professionals with expert guidance and world-class educational opportunities.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 bg-on-primary/10 rounded-full flex items-center justify-center hover:bg-secondary-container transition-all" href="#">
+<span class="material-symbols-outlined text-on-primary text-xl">share</span>
+</a>
+<a class="w-10 h-10 bg-on-primary/10 rounded-full flex items-center justify-center hover:bg-secondary-container transition-all" href="#">
+<span class="material-symbols-outlined text-on-primary text-xl">group</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="text-on-primary font-bold mb-6">Quick Links</h4>
+<ul class="space-y-4">
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">Home</a></li>
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">Courses</a></li>
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">Colleges</a></li>
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">Admission Process</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-on-primary font-bold mb-6">Resources</h4>
+<ul class="space-y-4">
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">About Us</a></li>
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">Contact Us</a></li>
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a></li>
+<li class=""><a class="text-surface-variant opacity-80 hover:text-secondary-fixed transition-colors" href="#">Terms &amp; Conditions</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-on-primary font-bold mb-6">Our Offices</h4>
+<div class="space-y-4 text-surface-variant opacity-80">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary-fixed-dim">location_on</span>
+<p class="">123 Education Plaza, New Delhi, India 110001</p>
+</div>
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary-fixed-dim">phone</span>
+<p class="">+91 98765 43210</p>
+</div>
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary-fixed-dim">mail</span>
+<p class="">info@promiselandindia.com</p>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full px-gutter max-w-max-width mx-auto border-t border-on-primary/10 pt-10 text-center">
+<p class="text-surface-variant opacity-80 text-label-md">© 2024 PromiseLand India Education. All Rights Reserved.</p>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for active nav links
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => {
+                    l.classList.remove('text-secondary', 'border-b-2', 'border-secondary', 'font-bold');
+                    l.classList.add('text-on-surface-variant');
+                });
+                link.classList.remove('text-on-surface-variant');
+                link.classList.add('text-secondary', 'border-b-2', 'border-secondary', 'font-bold');
+            });
+        });
+    </script>
+
+
+</body></html>
