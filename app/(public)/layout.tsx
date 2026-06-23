@@ -2,7 +2,6 @@ import { Header } from '@/components/public/Header';
 import { Footer } from '@/components/public/Footer';
 import { AnnouncementBar } from '@/components/public/AnnouncementBar';
 import { WhatsAppFloat } from '@/components/public/WhatsAppFloat';
-import { MobileCTA } from '@/components/public/MobileCTA';
 import { prisma } from '@/lib/db';
 
 async function getSettings() {
@@ -36,7 +35,6 @@ export default async function PublicLayout({
       </main>
       <Footer />
       <WhatsAppFloat whatsappUrl={settings?.whatsappUrl || null} />
-      <MobileCTA />
     </div>
   );
 }
