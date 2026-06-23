@@ -43,6 +43,7 @@ const FIELD_CONFIG: Record<TabId, { key: string; label: string; type: string; re
     { key: 'slug',        label: 'Slug (URL key)',      type: 'text',     required: true },
     { key: 'icon',        label: 'Icon Name',           type: 'text',     required: true },
     { key: 'description', label: 'Description',         type: 'textarea', required: true, rows: 3 },
+    { key: 'bullets',     label: 'Highlights (one per line)', type: 'textarea', required: true, rows: 4 },
     { key: 'order',       label: 'Display Order',       type: 'number' },
   ],
   steps: [
@@ -78,6 +79,21 @@ function getRecordLabel(tab: TabId, rec: any): string {
   return rec.id;
 }
 
+// ─── Helpers: bullets JSON <-> textarea string ────────────────────────────────
+function bulletsToText(bullets: any): string {
+  if (!bullets) return '';
+  if (Array.isArray(bullets)) return bullets.join('\n');
+  if (typeof bullets === 'string') {
+    try { const parsed = JSON.parse(bullets); return Array.isArray(parsed) ? parsed.join('\n') : bullets; }
+    catch { return bullets; }
+  }
+  return '';
+}
+
+function textToBullets(text: string): string[] {
+  return text.split('\n').map((s) => s.trim()).filter(Boolean);
+}
+
 // ─── Inline Form ──────────────────────────────────────────────────────────────
 function ContentForm({
   tab, initial, onSave, onCancel, saving,
@@ -89,11 +105,26 @@ function ContentForm({
   saving: boolean;
 }) {
   const fields = FIELD_CONFIG[tab];
-  const [form, setForm] = useState<Record<string, any>>(initial);
+
+  // Normalise bullets from JSON/array → plain text for editing
+  const normalised = { ...initial };
+  if (tab === 'programs' && initial.bullets !== undefined) {
+    normalised.bullets = bulletsToText(initial.bullets);
+  }
+
+  const [form, setForm] = useState<Record<string, any>>(normalised);
 
   return (
     <form
-      onSubmit={(e) => { e.preventDefault(); onSave(form); }}
+      onSubmit={(e) => {
+        e.preventDefault();
+        // Convert bullets textarea back to JSON array before saving
+        const payload = { ...form };
+        if (tab === 'programs' && typeof payload.bullets === 'string') {
+          payload.bullets = textToBullets(payload.bullets);
+        }
+        onSave(payload);
+      }}
       className="border border-navy/20 rounded-xl p-6 bg-navy/5 space-y-4 mt-2"
     >
       <div className="grid md:grid-cols-2 gap-4">
