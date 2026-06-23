@@ -23,22 +23,20 @@ export default async function PublicLayout({
   const settings = await getSettings();
 
   return (
-    <>
-      <body suppressHydrationWarning={true}>
-        {settings && (
-          <AnnouncementBar
-            text={settings.announcementText || ''}
-            enabled={settings.announcementEnabled}
-          />
-        )}
-        <Header />
-        <main className="min-h-screen bg-background dark:bg-gray-900">
-          {children}
-        </main>
-        <Footer />
-        <WhatsAppFloat whatsappUrl={settings?.whatsappUrl || null} />
-        <MobileCTA />
-      </body>
-    </>
+    <div className="flex flex-col min-h-screen">
+      {settings && (
+        <AnnouncementBar
+          text={settings.announcementText || ''}
+          enabled={settings.announcementEnabled}
+        />
+      )}
+      <Header phone={settings?.phone} />
+      <main className="flex-grow bg-background dark:bg-gray-900">
+        {children}
+      </main>
+      <Footer />
+      <WhatsAppFloat whatsappUrl={settings?.whatsappUrl || null} />
+      <MobileCTA />
+    </div>
   );
 }

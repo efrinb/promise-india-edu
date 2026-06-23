@@ -13,13 +13,14 @@ export const collegeSchema = z.object({
   about: z.string().min(50, 'About section must be at least 50 characters'),
   courses: z.array(z.string()).default([]),
   fees: z.object({
-    year1: z.number().min(0),
-    year2: z.number().min(0),
-    year3: z.number().min(0),
-    year4: z.number().min(0),
+    courseFees: z.record(z.string(), z.number().min(0)).optional().default({}),
+    year1: z.number().min(0).optional(),
+    year2: z.number().min(0).optional(),
+    year3: z.number().min(0).optional(),
+    year4: z.number().min(0).optional(),
     hostel: z.number().min(0).optional(),
     other: z.number().min(0).optional(),
-    total: z.number().min(0),
+    total: z.number().min(0).optional(),
   }),
   admissionStatus: z.enum(['open', 'closing_soon', 'closed']).default('open'),
   featured: z.boolean().default(false),
@@ -31,6 +32,13 @@ export const collegeSchema = z.object({
     return val;
   }),
   status: z.enum(['draft', 'published']).default('draft'),
+  
+  // Dynamic Metadata Fields
+  affiliation: z.string().nullable().optional(),
+  approval: z.string().nullable().optional(),
+  established: z.string().nullable().optional(),
+  campusSize: z.string().nullable().optional(),
+  facilities: z.array(z.string()).default([]),
 });
 
 export const consultationSchema = z.object({

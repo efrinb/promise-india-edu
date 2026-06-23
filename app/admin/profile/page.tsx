@@ -128,8 +128,8 @@ export default function AdminProfilePage() {
             <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
             {success && (
-                <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded">
-                    Profile updated successfully
+                <div className="mb-4 p-4 bg-navy/5 border border-navy/20 rounded text-navy text-sm font-semibold">
+                    ✓ Profile updated successfully
                 </div>
             )}
 

@@ -13,7 +13,8 @@ import {
   Menu,
   X,
   Shield,
-  User
+  User,
+  Database
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { NotificationProvider, useNotifications } from '@/context/NotificationContext';
@@ -83,6 +84,7 @@ function AdminLayoutContent({
       label: 'Consultations',
       badge: unreadCount > 0 ? unreadCount : undefined
     },
+    { href: '/admin/content', icon: Database, label: 'Site Content' },
     { href: '/admin/settings', icon: Settings, label: 'Settings' },
   ];
 
@@ -94,7 +96,7 @@ function AdminLayoutContent({
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="p-6 border-b border-white/10 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-white">Admin Panel</h2>
+          <h2 className="text-xl font-bold text-white tracking-wide">Promise India Admin</h2>
         </div>
 
         {/* Profile Section */}
@@ -140,8 +142,10 @@ function AdminLayoutContent({
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={`
-                  flex items-center justify-between px-4 py-3 rounded-lg transition-colors
-                  ${isActive ? 'bg-white/20 dark:bg-gray-700' : 'hover:bg-white/10 dark:hover:bg-gray-700'}
+                  flex items-center justify-between py-3 transition-all duration-200
+                  ${isActive 
+                    ? 'bg-white/10 text-[#d9a441] border-l-4 border-[#d9a441] pr-4 pl-3 rounded-r-xl font-bold' 
+                    : 'hover:bg-white/5 text-white/80 hover:text-white rounded-xl pr-4 pl-4'}
                 `}
               >
                 <div className="flex items-center space-x-3">
@@ -180,7 +184,7 @@ function AdminLayoutContent({
             >
               {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Promise Land India Education</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Promise India Education Consultancy</h1>
             <div className="flex items-center gap-4">
               {unreadCount > 0 && (
                 <Link href="/admin/consultations">
