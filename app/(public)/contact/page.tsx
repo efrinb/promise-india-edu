@@ -196,8 +196,8 @@ function ContactForm() {
             <div className="relative hidden lg:block">
               <div className="relative aspect-[4/3] rounded-[30px] overflow-hidden border-4 border-on-primary/10 shadow-[0_20px_40px_rgba(0,0,0,0.2)]">
                  <Image
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=1000"
-                  alt="Counselor with headset smiling"
+                  src="/contact-page-banner.png"
+                  alt="Contact PromiseLand India"
                   fill
                   priority
                   className="object-cover"

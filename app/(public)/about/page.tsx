@@ -66,11 +66,12 @@ export default async function AboutPage() {
 
             {/* Right Image */}
             <div className="lg:col-span-5 relative hidden lg:block">
-              <div className="relative w-80 h-80 mx-auto rounded-full overflow-hidden border-4 border-white/10 shadow-2xl">
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-[#d9a441]/20 blur-3xl rounded-full"></div>
                 <img
-                  src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=400"
-                  alt="Nurse with Tablet"
-                  className="w-full h-full object-cover"
+                  src="/about-office.png"
+                  alt="Excellence in Nursing"
+                  className="relative w-full aspect-[4/3] object-cover rounded-[32px] shadow-2xl border-4 border-white/10"
                 />
               </div>
             </div>
